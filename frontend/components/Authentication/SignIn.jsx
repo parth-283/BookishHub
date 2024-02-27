@@ -25,13 +25,7 @@ export default function SignIn() {
 
   return (
     <>
-      <div
-        className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url('https://source.unsplash.com/1000x1000/?books')",
-        }}
-      >
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="my-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account

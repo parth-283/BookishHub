@@ -1,27 +1,34 @@
+import Link from "next/link";
 import React from "react";
 
 export default function HeroSection() {
   return (
-    <div className="bg-white">
+    <div
+      className="bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: "url('/Images/background-4.jpg')",
+      }}
+    >
       <div className="relative isolate px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-32 ">
           <div className="hidden sm:flex sm:justify-center">
             <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-              Announcing our next round of funding.{" "}
-              <a href="#" className="font-semibold text-indigo-600">
+            Your Gateway to a World of Stories{" "}
+              <Link href="#" className="font-semibold text-indigo-600">
                 <span className="absolute inset-0" aria-hidden="true" />
                 Read more <span aria-hidden="true">&rarr;</span>
-              </a>
+              </Link>
             </div>
           </div>
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Data to enrich your online business
+              Welcome to BookishHub,
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-              lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-              fugiat aliqua.
+              Discover a universe of literature, where every page holds a new
+              adventure, a new mystery, and a new journey waiting to unfold.
+              Dive into captivating stories spanning genres from fantasy to
+              romance, from thriller to historical fiction.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
