@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "./Header";
-import 'rsuite/dist/rsuite-no-reset.min.css';
-import { CustomProvider } from 'rsuite';
+import "rsuite/dist/rsuite-no-reset.min.css";
+import { CustomProvider } from "rsuite";
+import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   return (
@@ -9,10 +10,15 @@ const Layout = ({ children }) => {
       <header>
         <Header />
       </header>
-      <div >
-        <main> <CustomProvider>{children}</CustomProvider></main>
+      <div>
+        <main>
+          {" "}
+          <CustomProvider>{children}</CustomProvider>
+        </main>
       </div>
-      <footer>{/* Your footer content */}</footer>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };
