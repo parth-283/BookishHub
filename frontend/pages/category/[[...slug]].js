@@ -83,18 +83,15 @@ const product = [
   // Add more categories as needed
 ];
 
-const reviews = { href: "#", average: 4, totalCount: 117 };
-
-function classNameNames(...classNamees) {
-  return classNamees.filter(Boolean).join(" ");
-}
 export default function Book({ book }) {
   const router = useRouter();
   // const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   // const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
 
+  const handleRedirect = (slug) => {
+    router.push(`/book/${slug}`);
+  };
 
-  // Render the book details
   return (
     <>
       <div className="relative bg-white py-16 ">
@@ -125,7 +122,11 @@ export default function Book({ book }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {product.map((item, index) => {
               return (
-                <div key={index} className="bg-white rounded-lg shadow-md p-4">
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-md p-4"
+                  onClick={() => handleRedirect(item.categoryName)}
+                >
                   <div className="mb-4 relative rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-lg">
                     <img
                       src={item.unsplashImageURL}

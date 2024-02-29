@@ -12,7 +12,7 @@ function classNames(...classes) {
 let navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Category", href: "/category", current: false },
-  { name: "List", href: "/book", current: false },
+  { name: "Books", href: "/book", current: false },
   { name: "Contact", href: "/contact", current: false },
 ];
 
