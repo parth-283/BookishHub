@@ -3,12 +3,7 @@ import { IsEnum } from 'class-validator';
 import { Document } from 'mongoose';
 import { BookGenre } from '../dto/genre-book.dto';
 import { BookFormats } from '../dto/format-book.dto';
-
-export interface BookDimensions {
-  height: number;
-  width: number;
-  thickness: number;
-}
+import { BookDimensions } from '../dto/dimension-book.dto';
 
 @Schema({ timestamps: true })
 export class Book extends Document {
