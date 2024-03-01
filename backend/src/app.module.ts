@@ -7,6 +7,8 @@ import { LoggerModule } from './logger/logger.module';
 import databaseConfig from './config/database.config';
 import { BooksModule } from './Component/books/books.module';
 import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './component/email/email.module';
+import { VerifyEmailModule } from './component/verify-email/verify-email.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { AuthModule } from './auth/auth.module';
     LoggerModule,
     UserModule,
     AuthModule,
+    EmailModule,
+    VerifyEmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

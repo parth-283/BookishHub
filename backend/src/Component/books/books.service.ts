@@ -23,4 +23,22 @@ export class BooksService {
   async findOne(id: string): Promise<Book | null> {
     return this.bookModel.findById(id).exec();
   }
+
+  async update(id: string, updateBookDto: CreateBookDto): Promise<Book | null> {
+    const updatedBook = await this.bookModel
+      .findByIdAndUpdate(id, updateBookDto, { new: true })
+      .exec();
+    if (!updatedBook) {
+      return null; // Book with the specified ID not found
+    }
+    return updatedBook;
+  }
+
+  async remove(id: string): Promise<Book | null> {
+    const deletedBook = await this.bookModel.findByIdAndDelete(id).exec();
+    if (!deletedBook) {
+      return null; // Book with the specified ID not found
+    }
+    return deletedBook;
+  }
 }

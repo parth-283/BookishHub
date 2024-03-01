@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Logger,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
@@ -30,17 +21,17 @@ export class BooksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Book> {
+  async findOne(@Param('id') id: string): Promise<Book> {
     return this.booksService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string): string {
-    return `This action updates book ${id}`;
+  async update(@Param('id') id: string, @Body() updateBookDto: CreateBookDto): Promise<Book | null> {
+    return this.booksService.update(id, updateBookDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): string {
-    return `This action removes book ${id}`;
+  async remove(@Param('id') id: string): Promise<Book | null> {
+    return this.booksService.remove(id);
   }
 }
