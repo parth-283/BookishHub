@@ -14,7 +14,7 @@ dotenv.config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot(`${process.env.DATABASE_URL}`),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
     BooksModule,
     LoggerModule,
     UserModule,

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { EmailService } from '../email/email.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -13,30 +14,51 @@ export class UserService {
     private readonly emailService: EmailService,
   ) {}
 
+  generateUUID(): string {
+    const id: string = uuidv4();
+    return id;
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const createdUser = new this.userModel({
-      ...createUserDto,
-      password: hashedPassword,
-    });
+    try {
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    const verificationToken = 'your-verification-token';
+      const createdUser = new this.userModel({
+        ...createUserDto,
+        id: this.generateUUID(),
+        password: hashedPassword,
+      });
 
-    // Send welcome email with verification URL
-    await this.emailService.sendWelcomeEmail(
-      createUserDto.email,
-      verificationToken,
-    );
+      // Send welcome email with verification URL
+      // await this.emailService.sendWelcomeEmail(
+      //   createUserDto.email,
+      //   process.env.JWT_SECRET,
+      // );
 
-    return createdUser.save();
+      return await createdUser.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new HttpException('Duplicate key error:', HttpStatus.CONFLICT);
+      } else if (error.code === 'SomeErrorCode') {
+        throw new HttpException(
+          'Specific error message',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).exec();
+    return await this.userModel.findOne({ email }).exec();
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
+    return await this.userModel.findById(id).exec();
   }
 
   async update(id: string, updateUserDto: any): Promise<User | null> {

@@ -3,30 +3,29 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class EmailService {
-  async sendWelcomeEmail(
-    email: string,
-    verificationToken: string,
-  ): Promise<void> {
+  private readonly transporter: nodemailer.Transporter;
+
+  constructor() {
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
+      },
+    });
+  }
+
+  async sendWelcomeEmail(email: string, verificationToken: string): Promise<void> {
     try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'your-email@gmail.com',
-          pass: 'your-password',
-        },
-      });
-
       const verificationUrl = `http://localhost:3000/verify-email?token=${verificationToken}`;
-
-      // Example welcome email message with verification URL
       const message = `
-            <h1>Welcome to our platform!</h1>
-            <p>Thank you for joining us.</p>
-            <p>Please verify your email address by clicking <a href="${verificationUrl}">here</a>.</p>
-          `;
+        <h1>Welcome to our platform!</h1>
+        <p>Thank you for joining us.</p>
+        <p>Please verify your email address by clicking <a href="${verificationUrl}">here</a>.</p>
+      `;
 
-      await transporter.sendMail({
-        from: 'your@email.com',
+      await this.transporter.sendMail({
+        from: process.env.EMAIL,
         to: email,
         subject: 'Welcome to Our Platform',
         html: message,
@@ -41,15 +40,6 @@ export class EmailService {
 
   async sendPasswordResetEmail(email: string): Promise<void> {
     try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'your-email@gmail.com',
-          pass: 'your-password',
-        },
-      });
-
-      // Example password reset email message
       const message = `
         <h1>Password Reset</h1>
         <p>You have requested to reset your password.</p>
@@ -57,8 +47,8 @@ export class EmailService {
         <a href="https://yourwebsite.com/reset-password">Reset Password</a>
       `;
 
-      await transporter.sendMail({
-        from: 'your@email.com',
+      await this.transporter.sendMail({
+        from: process.env.EMAIL,
         to: email,
         subject: 'Password Reset Request',
         html: message,

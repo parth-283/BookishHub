@@ -6,7 +6,7 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class User {
   @Prop()
-  UUID: string;
+  id: string;
 
   @Prop()
   firstName: string;

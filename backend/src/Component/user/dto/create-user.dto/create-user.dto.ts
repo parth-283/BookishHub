@@ -1,5 +1,4 @@
 export class CreateUserDto {
-  UUID: string;
   firstName: string;
   lastName: string;
   city: string;
