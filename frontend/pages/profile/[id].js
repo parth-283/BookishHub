@@ -22,7 +22,7 @@ const users = [
 ];
 const books = [
   {
-    UUID: "1",
+    id: "1",
     title: "Book Title 1",
     slug: "book-title-1",
     author: "Author 1",
@@ -106,7 +106,7 @@ const UserProfilePage = ({ user, userBooks }) => {
 // In getStaticPaths
 export async function getStaticPaths() {
   const paths = users.map((user) => ({
-    params: { slug: user.slug },
+    params: { id: user.id },
   }));
 
   return { paths, fallback: false };
@@ -114,7 +114,7 @@ export async function getStaticPaths() {
 
 // In getStaticProps
 export async function getStaticProps({ params }) {
-  const user = users.find((u) => u.slug === params.slug); // Change params.username to params.slug
+  const user = users.find((u) => u.id === params.id); // Change params.username to params.slug
   const userBooks = books.filter((book) => book.author === user.name);
   return { props: { user, userBooks } };
 }

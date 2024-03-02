@@ -8,7 +8,7 @@ export class PaymentService {
   private readonly stripe: Stripe;
 
   constructor() {
-    this.stripe = new Stripe('YOUR_SECRET_KEY', {
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2023-10-16',
     });
   }

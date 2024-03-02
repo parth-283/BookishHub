@@ -15,7 +15,10 @@ export class EmailService {
     });
   }
 
-  async sendWelcomeEmail(email: string, verificationToken: string): Promise<void> {
+  async sendWelcomeEmail(
+    email: string,
+    verificationToken: string,
+  ): Promise<void> {
     try {
       const verificationUrl = `http://localhost:3000/verify-email?token=${verificationToken}`;
       const message = `
@@ -38,13 +41,16 @@ export class EmailService {
     }
   }
 
-  async sendPasswordResetEmail(email: string): Promise<void> {
+  async sendPasswordResetEmail(
+    email: string,
+    resetLink: string,
+  ): Promise<void> {
     try {
       const message = `
         <h1>Password Reset</h1>
         <p>You have requested to reset your password.</p>
         <p>Click the link below to reset your password:</p>
-        <a href="https://yourwebsite.com/reset-password">Reset Password</a>
+        <a href="${resetLink}">Reset Password</a>
       `;
 
       await this.transporter.sendMail({

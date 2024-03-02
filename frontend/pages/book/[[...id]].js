@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 const books = [
   {
-    UUID: "1",
+    id: "1",
     title: "Book Title 1",
     slug: "book-title-1",
     author: "Author 1",
@@ -32,7 +32,7 @@ const books = [
     },
   },
   {
-    UUID: "2",
+    id: "2",
     title: "Book Title 2",
     slug: "book-title-2",
     author: "Author 2",
@@ -62,7 +62,7 @@ const books = [
 ];
 export default function book() {
   const router = useRouter();
-  const { slug } = router.query;
+  const { id } = router.query;
   const [bokksList, setbokksList] = useState(books);
 
   return (
@@ -105,7 +105,7 @@ export default function book() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {bokksList.map((book) => (
-                <BooksList key={book.UUID} book={book} />
+                <BooksList key={book.id} book={book} />
               ))}
             </div>
           </div>

@@ -1,6 +1,5 @@
 // admin.module.ts
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
 import { UserModule } from '../user/user.module';

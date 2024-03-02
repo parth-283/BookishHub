@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const books = [
   {
-    UUID: "1",
+    id: "1",
     title: "Book Title 1",
     slug: "book-title-1",
     author: "Author 1",
@@ -114,7 +114,7 @@ const BookDetailPage = ({ book }) => {
               </button>
             </div>
           </div>
-          
+
           <div className="md:w-1/2 relative">
             <img
               src={book.coverImage}
@@ -136,14 +136,14 @@ const BookDetailPage = ({ book }) => {
 
 export async function getStaticPaths() {
   const paths = books.map((book) => ({
-    params: { slug: book.slug },
+    params: { id: book.id },
   }));
 
   return { paths, fallback: false };
 }
 
 export async function getStaticProps({ params }) {
-  const book = books.find((b) => b.slug === params.slug);
+  const book = books.find((b) => b.id === params.id);
   return { props: { book } };
 }
 
