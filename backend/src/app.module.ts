@@ -9,6 +9,10 @@ import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './component/email/email.module';
 import { VerifyEmailModule } from './component/verify-email/verify-email.module';
 import { PaymentModule } from './component/payment/payment.module';
+import { AdminModule } from './component/admin/admin.module';
+import { ContactService } from './component/contact/contact.service';
+import { ContactController } from './component/contact/contact.controller';
+import { ContactModule } from './component/contact/contact.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -22,8 +26,10 @@ dotenv.config();
     EmailModule,
     VerifyEmailModule,
     PaymentModule,
+    AdminModule,
+    ContactModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ContactController],
+  providers: [AppService, ContactService],
 })
 export class AppModule {}

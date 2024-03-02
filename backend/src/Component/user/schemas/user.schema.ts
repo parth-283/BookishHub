@@ -8,6 +8,12 @@ export class User {
   @Prop()
   id: string;
 
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({ required: true })
+  role: string;
+
   @Prop()
   firstName: string;
 
@@ -31,9 +37,6 @@ export class User {
 
   @Prop({ unique: true })
   email: string;
-
-  @Prop()
-  password: string;
 
   @Prop()
   phone: string;
