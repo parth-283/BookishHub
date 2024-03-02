@@ -1,7 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
 import getConfig from 'next/config';
-import Router from 'next/router'
-import moment from 'moment';
 import { fetchWrapper } from '../helpers';
 import { signOut } from 'next-auth/react';
 

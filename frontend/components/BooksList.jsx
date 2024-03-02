@@ -20,7 +20,7 @@ const BooksList = ({ book }) => {
         <p className="text-gray-600 mb-2">Availability: {book.availability}</p>
         <div className="flex justify-between">
           <Link
-            href={`/books/${book.UUID}`}
+            href={`/book-detail/${book.id}`}
             className="text-blue-500 hover:underline"
           >
             View Details

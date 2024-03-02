@@ -1,7 +1,8 @@
 import BooksList from "@/components/BooksList";
+import { booksService } from "@/services/books.service";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const books = [
   {
@@ -64,6 +65,21 @@ export default function book() {
   const router = useRouter();
   const { id } = router.query;
   const [bokksList, setbokksList] = useState(books);
+
+  useEffect(() => {
+    getBooks();
+  }, []);
+
+  const getBooks = async () => {
+    booksService
+      .getBooks()
+      .then((res) => {
+        setbokksList(res);
+      })
+      .catch((errorMessage) => {
+        console.log(errorMessage, "errorMessage");
+      });
+  };
 
   return (
     <div>
