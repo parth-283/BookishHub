@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop()
+  @Prop({ required: true })
   id: string;
 
   @Prop({ required: true })
@@ -14,10 +14,13 @@ export class User {
   @Prop({ required: true })
   role: string;
 
-  @Prop()
+  @Prop({ required: true, unique: true })
+  email: string;
+
+  @Prop({ required: true })
   firstName: string;
 
-  @Prop()
+  @Prop({ required: true })
   lastName: string;
 
   @Prop()
@@ -34,9 +37,6 @@ export class User {
 
   @Prop()
   address: string;
-
-  @Prop({ unique: true })
-  email: string;
 
   @Prop()
   phone: string;

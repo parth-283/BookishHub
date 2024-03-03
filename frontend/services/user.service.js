@@ -7,51 +7,8 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}`;
 // const userSubject = new BehaviorSubject(process.browser && JSON.parse(localStorage.getItem('user')));
 
 export const userService = {
-    // user: userSubject.asObservable(),
-    // get userValue() { return userSubject.value },
-    GetUserProfile,
-    UpdateUserProfile,
-    getUserExperience,
-    getInstitutions,
-    saveUserLanguage,
-    saveUserSkills,
-    saveWorkExperience,
-    saveEducation,
-    getUserJobPreference,
-    saveUserJobPreference,
-    GetUserHeaderInfo,
-    saveEnquiry,
-    saveDemoEnquiry,
-    createPaymentIntent,
-    rewardDetails,
-    getRewardChartDetail,
-    createStripeSubscription,
-    cancelSubscription,
-    getUpdatedXpPointModal,
-    latestPremiumCourse,
-    likePost,
-    viewPost,
-    getLockedList,
-    getAvailableList,
-    favPost,
-    redeemVoucher,
-    getRedeemedVoucher,
-    GetAllOccupation,
-    GetAllXPModel,
-    getVoucherCode,
-    UpdateProfileForCV,
-    // ?NEW APIS
-    GetCVProfile,
-    GetWorkExperience,
-    saveUserWorkExperience,
-    deleteUserWorkExperience,
-    getUserEducation,
-    saveUserEducation,
-    deleteUserEducation,
-    getUserLanguage,
-    saveCVUserLanguage,
-    deleteUserLanguage,
-    getUserSkillsList
+   
+  
 };
 
 function GetUserProfile() {

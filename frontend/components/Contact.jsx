@@ -4,11 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { contactService } from "@/services/contact.service";
 import Alert from "./Alert";
-// import { Switch } from "@headlessui/react";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),

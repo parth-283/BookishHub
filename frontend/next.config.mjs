@@ -3,8 +3,16 @@
 import webpack from "webpack";
 
 const nextConfig = {
+  compiler: {
+    styledComponents: true,
+  },
   images: {
-    domains: ["localhost", "tailwindui.com", "source.unsplash.com", "images.unsplash.com"],
+    domains: [
+      "localhost",
+      "tailwindui.com",
+      "source.unsplash.com",
+      "images.unsplash.com",
+    ],
   },
   reactStrictMode: true,
   webpack: (config) => {
@@ -18,10 +26,11 @@ const nextConfig = {
     return config;
   },
   publicRuntimeConfig: {
-    apiUrl: process.env.NODE_ENV === 'development'
-      ? process.env.NEXT_API_BASE_URL
-      : process.env.NEXT_API_BASE_URL
-  }
+    apiUrl:
+      process.env.NODE_ENV === "development"
+        ? process.env.NEXT_API_BASE_URL
+        : process.env.NEXT_API_BASE_URL,
+  },
 };
 
 export default nextConfig;

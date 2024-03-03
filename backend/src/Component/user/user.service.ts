@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly emailService: EmailService,
@@ -21,14 +22,18 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
+      this.logger.log('Creating new user.');
+
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
       const createdUser = new this.userModel({
         ...createUserDto,
         id: this.generateUUID(),
         password: hashedPassword,
+        role: 'user',
       });
 
+      this.logger.log('Create new user with id:', createdUser.id);
       // Send welcome email with verification URL
       // await this.emailService.sendWelcomeEmail(
       //   createUserDto.email,

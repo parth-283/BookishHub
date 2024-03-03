@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { signIn } from "next-auth/react";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -19,7 +20,31 @@ export default function SignIn() {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    console.log(data, errors);
+    debugger;
+    const email = data.email;
+    const password = data.password;
+
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false, // prevent automatic redirection
+    })
+      .then((res) => {
+        debugger;
+        // Handle result, redirect if successful, show error otherwise
+        if (result?.error) {
+          console.error("Sign in failed:", result.error);
+        } else {
+          // Redirect user to desired page (e.g., dashboard) after successful sign-in
+          window.location.href = "/";
+        }
+      })
+      .catch((errorMessage) => {
+        debugger;
+      });
+  };
 
   console.log(watch("example"));
 
@@ -46,8 +71,8 @@ export default function SignIn() {
                   id="email"
                   name="email"
                   type="email"
-                  autoComplete="email"
                   {...register("email", { required: true })}
+                  autoComplete="email"
                   className="bg-transparent block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -78,9 +103,8 @@ export default function SignIn() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="password"
-                  required
                   {...register("password", { required: true })}
+                  autoComplete="password"
                   className="bg-transparent block w-full rounded-md border-0 py-1. px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

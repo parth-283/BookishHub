@@ -1,14 +1,12 @@
-// pages/api/auth/[...nextauth].js
-
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+import { Providers } from 'next-auth/providers';
 
 const options = {
   providers: [
     Providers.Credentials({
       name: "NestJS API", // Provide a name for your custom provider
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {

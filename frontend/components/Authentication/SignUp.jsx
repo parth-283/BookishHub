@@ -1,18 +1,27 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { accountService } from "@/services/account.service";
+import Alert from "../Alert";
+import { useRouter } from "next/router";
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().required("Password is required"),
-  confirmPassword: yup.string().required("Confirm password is required"),
+  confirmPassword: yup
+    .string()
+    .required("Confirm password is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
 export default function SignUp() {
+  const router = useRouter();
+  const [showAlert, setShowAlert] = useState(false);
+  const [isServerError, setIsServerError] = useState("");
   const {
     register,
     handleSubmit,
@@ -22,9 +31,19 @@ export default function SignUp() {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data) => console.log(data);
-
-  console.log(watch("example"));
+  const onSubmit = async (data) => {
+    if (!errors) {
+      await accountService
+        .register(data)
+        .then((res) => {
+          router.push("/signin");
+        })
+        .catch((errorMessage) => {
+          setShowAlert(true);
+          setIsServerError(errorMessage);
+        });
+    }
+  };
 
   return (
     <>
@@ -37,6 +56,16 @@ export default function SignUp() {
 
         <div className="my-4  sm:mx-auto sm:w-full sm:max-w-sm ">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="container mx-auto">
+              {showAlert && (
+                <Alert
+                  type="error"
+                  message={isServerError}
+                  onClose={handleClose}
+                />
+              )}
+            </div>
+
             <div className="flex flex-row  space-x-4">
               <div className="basis-1/2">
                 <label
@@ -51,11 +80,15 @@ export default function SignUp() {
                     name="firstName"
                     type="firstName"
                     autoComplete="firstName"
-                    required
                     {...register("firstName", { required: true })}
                     className="bg-transparent block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
+                {errors.firstName && (
+                  <span className="text-red-500">
+                    {errors.firstName.message}
+                  </span>
+                )}
               </div>
 
               <div className="basis-1/2">
@@ -71,11 +104,15 @@ export default function SignUp() {
                     name="lastName"
                     type="lastName"
                     autoComplete="lastName"
-                    required
                     {...register("lastName", { required: true })}
                     className="bg-transparent block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
+                {errors.lastName && (
+                  <span className="text-red-500">
+                    {errors.lastName.message}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -92,11 +129,13 @@ export default function SignUp() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  required
                   {...register("email", { required: true })}
                   className="bg-transparent block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
+              )}
             </div>
 
             <div>
@@ -114,11 +153,13 @@ export default function SignUp() {
                   name="password"
                   type="password"
                   autoComplete="current-password"
-                  required
                   {...register("password", { required: true })}
                   className="bg-transparent block w-full rounded-md border-0 py-1. px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {errors.password && (
+                <span className="text-red-500">{errors.password.message}</span>
+              )}
             </div>
 
             <div>
@@ -134,13 +175,17 @@ export default function SignUp() {
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="confirmPassword"
+                  type="password"
                   autoComplete="current-confirmPassword"
-                  required
                   {...register("confirmPassword", { required: true })}
                   className="bg-transparent block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {errors.confirmPassword && (
+                <span className="text-red-500">
+                  {errors.confirmPassword.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -148,7 +193,7 @@ export default function SignUp() {
                 type="submit"
                 className="flex w-full justify-center rounded-md outline outline-blue-500 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900  shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Sign up
               </button>
             </div>
           </form>
