@@ -65,12 +65,12 @@ export default function SignIn() {
                   Password
                 </label>
                 <div className="text-sm">
-                  <a
+                  <Link
                     href="#"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="mt-2">
@@ -78,7 +78,7 @@ export default function SignIn() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="password"
                   required
                   {...register("password", { required: true })}
                   className="bg-transparent block w-full rounded-md border-0 py-1. px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

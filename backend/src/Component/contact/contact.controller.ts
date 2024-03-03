@@ -28,7 +28,13 @@ export class ContactController {
 
   @Post()
   async createContact(@Body() createContactDto: CreateContactDto) {
-    return await this.contactService.createContact(createContactDto);
+    try {
+      const result = await this.contactService.createContact(createContactDto);
+
+      return { data: result, isSuceessfull: true };
+    } catch (error) {
+      return { error: error, isSuceessfull: false };
+    }
   }
 
   @Put(':id')

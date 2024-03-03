@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Switch } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { contactService } from "@/services/contact.service";
+import Alert from "./Alert";
+// import { Switch } from "@headlessui/react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,6 +21,10 @@ const validationSchema = yup.object().shape({
 
 export default function Contact() {
   const [agreed, setAgreed] = useState(false);
+  const [contactDetail, setContactDetail] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
+  const [isServerError, setIsServerError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -31,7 +37,26 @@ export default function Contact() {
 
   const onSubmit = (data) => {
     console.log(data);
-    reset();
+    contactService
+      .saveContact(data)
+      .then((res) => {
+        if (res.isSuceessfull) {
+          setContactDetail(res);
+          setShowAlert(true);
+          reset();
+        } else {
+          setIsServerError(res.error);
+          setShowAlert(true);
+        }
+      })
+      .catch((errorMessage) => {
+        setIsServerError(errorMessage);
+        setShowAlert(true);
+      });
+  };
+
+  const handleClose = () => {
+    setShowAlert(false);
   };
 
   return (
@@ -42,16 +67,32 @@ export default function Contact() {
       ></div>
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Contact sales
+          Get in Touch
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Aute magna irure deserunt veniam aliqua magna enim voluptate.
+          Have questions, suggestions, or just want to say hello? We'd love to
+          hear from you! Fill out the form below, and we'll get back to you as
+          soon as possible.
         </p>
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="mx-auto mt-16 max-w-xl sm:mt-20"
       >
+        <div className="container mx-auto">
+          {showAlert && (
+            <Alert
+              type={isServerError ? "error" : "success"}
+              message={
+                isServerError
+                  ? isServerError
+                  : "Your contact information has been successfully saved."
+              }
+              onClose={handleClose}
+            />
+          )}
+        </div>
+
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label
@@ -70,7 +111,9 @@ export default function Contact() {
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {errors.firstName && <span className="text-red-500">{errors.firstName.message}</span>}
+            {errors.firstName && (
+              <span className="text-red-500">{errors.firstName.message}</span>
+            )}
           </div>
           <div>
             <label
@@ -89,7 +132,9 @@ export default function Contact() {
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {errors.lastName && <span className="text-red-500">{errors.lastName.message}</span>}
+            {errors.lastName && (
+              <span className="text-red-500">{errors.lastName.message}</span>
+            )}
           </div>
           <div className="sm:col-span-2">
             <label
@@ -108,7 +153,9 @@ export default function Contact() {
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {errors.company && <span className="text-red-500">{errors.company.message}</span>}
+            {errors.company && (
+              <span className="text-red-500">{errors.company.message}</span>
+            )}
           </div>
           <div className="sm:col-span-2">
             <label
@@ -127,7 +174,9 @@ export default function Contact() {
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+            {errors.email && (
+              <span className="text-red-500">{errors.email.message}</span>
+            )}
           </div>
           <div className="sm:col-span-2">
             <label
@@ -159,10 +208,12 @@ export default function Contact() {
                 id="phone"
                 autoComplete="tel"
                 {...register("phone", { required: true })}
-                className="block w-full rounded-md border-0 px-3.5 py-2 pl-20 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 px-3.5 py-2  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+            {errors.phone && (
+              <span className="text-red-500">{errors.phone.message}</span>
+            )}
           </div>
           <div className="sm:col-span-2">
             <label
@@ -181,9 +232,11 @@ export default function Contact() {
                 defaultValue={""}
               />
             </div>
-            {errors.message && <span className="text-red-500">{errors.message.message}</span>}
+            {errors.message && (
+              <span className="text-red-500">{errors.message.message}</span>
+            )}
           </div>
-          <Switch.Group as="div" className="flex gap-x-4 sm:col-span-2">
+          {/* <Switch.Group as="div" className="flex gap-x-4 sm:col-span-2">
             <div className="flex h-6 items-center">
               <Switch
                 checked={agreed}
@@ -210,7 +263,7 @@ export default function Contact() {
               </a>
               .
             </Switch.Label>
-          </Switch.Group>
+          </Switch.Group> */}
         </div>
         <div className="mt-10">
           <button

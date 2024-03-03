@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 const BooksList = ({ book }) => {
+  
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {/* <Link href={`/books/${book.UUID}`} className="mb-4 relative rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-lg"> */}
@@ -20,14 +21,14 @@ const BooksList = ({ book }) => {
         <p className="text-gray-600 mb-2">Availability: {book.availability}</p>
         <div className="flex justify-between">
           <Link
-            href={`/book-detail/${book.id}`}
+            href={`/book-detail/${book.slug}`}
             className="text-blue-500 hover:underline"
           >
             View Details
           </Link>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+          {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
             Show more
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

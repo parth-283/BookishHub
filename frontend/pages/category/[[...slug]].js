@@ -6,7 +6,8 @@ import Link from "next/link";
 
 const product = [
   {
-    UUID: "9f90b5b4-487e-4e9e-b679-36a45a1d5cc7",
+    id: "9f90b5b4-487e-4e9e-b679-36a45a1d5cc7",
+    slug: "literary-fiction",
     categoryName: "Literary Fiction",
     categoryID: 1001001,
     categoryShortDescription:

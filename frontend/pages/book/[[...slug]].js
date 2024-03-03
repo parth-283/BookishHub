@@ -63,11 +63,12 @@ const books = [
 ];
 export default function book() {
   const router = useRouter();
-  const { id } = router.query;
-  const [bokksList, setbokksList] = useState(books);
+  const { slug } = router.query;
+  const [bokksList, setbokksList] = useState([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(true);
 
   useEffect(() => {
-    getBooks();
+    if(isDataLoaded){getBooks();}
   }, []);
 
   const getBooks = async () => {
@@ -75,6 +76,7 @@ export default function book() {
       .getBooks()
       .then((res) => {
         setbokksList(res);
+        setIsDataLoaded(false)
       })
       .catch((errorMessage) => {
         console.log(errorMessage, "errorMessage");

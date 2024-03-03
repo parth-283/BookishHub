@@ -1,5 +1,7 @@
-// pages/books/[slug].js
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { booksService } from "@/services/books.service";
 
 const books = [
   {
@@ -31,8 +33,27 @@ const books = [
   },
 ];
 
-const BookDetailPage = ({ book }) => {
+const BookDetailPage = () => {
+  const router = useRouter();
+  const { slug } = router.query;
+  const [book, setBook] = useState({});
+
+  useEffect(() => {
+    if (slug) {
+      getBookBySlug(slug);
+    }
+  }, [slug]);
+
+  const getBookBySlug = async (slug) => {
+     await booksService.getBookBySlug(slug).then((res) => {
+        setBook(res);
+      }).catch((errorMessage)=>{
+        console.error("Error fetching book:", errorMessage);
+      })
+  };
+
   return (
+ <>
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="flex flex-col md:flex-row">
@@ -72,7 +93,7 @@ const BookDetailPage = ({ book }) => {
               </div>
               <div className="col-span-2">
                 <p className="text-gray-600 mb-2">Tags:</p>
-                <p>{book.tags.join(", ")}</p>
+                <p>{book?.tags?.join(", ")}</p>
               </div>
               <div className="col-span-2">
                 <p className="text-gray-600 mb-2">References:</p>
@@ -94,7 +115,7 @@ const BookDetailPage = ({ book }) => {
                 <p className="text-gray-600 mb-2">Country:</p>
                 <p>{book.country}</p>
               </div>
-              <div className="col-span-1">
+              {book?.dimensions&&<div className="col-span-1">
                 <p className="text-gray-600 mb-2">Dimensions:</p>
                 <ul className="list-disc ml-8">
                   {Object.entries(book.dimensions).map(([key, value]) => (
@@ -103,7 +124,7 @@ const BookDetailPage = ({ book }) => {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </div>}
             </div>
             <div className="mt-6 flex justify-end">
               <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-2">
@@ -131,20 +152,8 @@ const BookDetailPage = ({ book }) => {
         </div>
       </div>
     </div>
+ </>
   );
 };
-
-export async function getStaticPaths() {
-  const paths = books.map((book) => ({
-    params: { id: book.id },
-  }));
-
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params }) {
-  const book = books.find((b) => b.id === params.id);
-  return { props: { book } };
-}
 
 export default BookDetailPage;

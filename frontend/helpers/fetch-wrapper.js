@@ -1,5 +1,3 @@
-import getConfig from 'next/config';
-
 import { accountService } from '../services/account.service';
 
 export const fetchWrapper = {

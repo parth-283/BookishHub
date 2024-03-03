@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Book, BookDocument } from './schemas/book.schema';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BooksService {
@@ -10,8 +11,21 @@ export class BooksService {
 
   constructor(@InjectModel(Book.name) private bookModel: Model<BookDocument>) {}
 
+  generateUUID(): string {
+    const id: string = uuidv4();
+    return id;
+  }
+
   async create(createBookDto: CreateBookDto): Promise<Book> {
-    const createdBook = new this.bookModel(createBookDto);
+    const slug = createBookDto.title.toLowerCase().split(' ').join('-');
+
+    const createdbook = new this.bookModel({
+      ...createBookDto,
+      id: this.generateUUID(),
+      slug: slug,
+    });
+
+    const createdBook = new this.bookModel(createdbook);
     this.logger.log('Book added successfully.');
     return createdBook.save();
   }
@@ -22,6 +36,10 @@ export class BooksService {
 
   async findOne(id: string): Promise<Book | null> {
     return this.bookModel.findById(id).exec();
+  }
+
+  async findBySlug(slug: string): Promise<Book | null> {
+    return this.bookModel.findOne({ slug }).exec();
   }
 
   async update(id: string, updateBookDto: CreateBookDto): Promise<Book | null> {

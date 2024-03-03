@@ -7,6 +7,12 @@ import { BookDimensions } from '../dto/dimension-book.dto';
 
 @Schema({ timestamps: true })
 export class Book extends Document {
+  @Prop({ required: true })
+  id: string;
+  
+  @Prop({ required: true })
+  slug: string;
+  
   @Prop({ required: true, default: '' })
   title: string;
 
