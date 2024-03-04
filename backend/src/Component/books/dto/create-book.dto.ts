@@ -3,6 +3,8 @@ import { BookFormats } from './format-book.dto';
 import { BookGenre } from './genre-book.dto';
 
 export class CreateBookDto {
+  readonly userId: string;
+  readonly categoryId: string;
   readonly id: string;
   readonly slug: string;
   readonly title: string;

@@ -27,9 +27,14 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Category> {
-    return this.categoryService.findOne(id);
+  @Get('getBySlug/:slug')
+  findOneBySlug(@Param('slug') slug: string): Promise<Category> {
+    return this.categoryService.findOneBySlug(slug);
+  }
+
+  @Get('getById/:id')
+  findOneById(@Param('id') id: string): Promise<Category> {
+    return this.categoryService.findOneByID(id);
   }
 
   @Put(':id')

@@ -1,7 +1,7 @@
 // user.schema.ts
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User {
@@ -50,8 +50,7 @@ export class User {
   @Prop()
   profileImage: string;
 
-  @Prop()
-  books: string[]; // Array of book ids
+  books: [{ type: mongoose.Schema.Types.ObjectId; ref: 'books' }];
 
   @Prop({ type: [String], default: [] }) // Array of strings for comments
   comments: string[];

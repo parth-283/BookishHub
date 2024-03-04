@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from 'next-auth/providers/credentials';
+import CredentialsProvider from "next-auth/providers/credentials";
 
 const options = {
   secret: process.env.secret,
@@ -12,13 +12,16 @@ const options = {
       },
       async authorize(credentials) {
         // Call your NestJS login API here
-        const response = await fetch("http://localhost:5000/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_API_BASE_URL}/auth/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+          }
+        );
 
         if (response.ok) {
           // If authentication is successful, return user data

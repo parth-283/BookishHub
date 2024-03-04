@@ -4,15 +4,16 @@ import { Document } from 'mongoose';
 import { BookGenre } from '../dto/genre-book.dto';
 import { BookFormats } from '../dto/format-book.dto';
 import { BookDimensions } from '../dto/dimension-book.dto';
+import mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Book extends Document {
   @Prop({ required: true })
   id: string;
-  
+
   @Prop({ required: true })
   slug: string;
-  
+
   @Prop({ required: true, default: '' })
   title: string;
 
@@ -71,6 +72,10 @@ export class Book extends Document {
 
   @Prop({ required: true, default: '' })
   country: string;
+
+  users: { type: mongoose.Schema.Types.ObjectId; ref: 'users' };
+
+  categories: { type: mongoose.Schema.Types.ObjectId; ref: 'categories' };
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

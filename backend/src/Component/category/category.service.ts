@@ -1,6 +1,6 @@
 // category.service.ts
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -21,11 +21,22 @@ export class CategoryService {
   }
 
   async findAll(): Promise<Category[]> {
-    return this.categoryModel.find().exec();
+    try {
+      return this.categoryModel.find().exec();
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  async findOne(id: string): Promise<Category> {
-    return this.categoryModel.findById(id).exec();
+  async findOneBySlug(slug: string): Promise<Category> {
+    return this.categoryModel.findOne({ slug: slug }).populate('books').exec();
+  }
+
+  async findOneByID(id: string): Promise<Category> {
+    return this.categoryModel.findOne({ id: id }).exec();
   }
 
   async update(

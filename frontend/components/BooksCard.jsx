@@ -90,7 +90,7 @@ export default function BooksCard() {
                 key={post.id}
                 className="bg-white rounded flex max-w-lg flex-col p-4 items-start justify-between shadow hover:shadow-lg"
               >
-                <div class="rounded">
+                <div className="rounded">
                   <Image
                     src="https://source.unsplash.com/400x400/?books"
                     alt="book card"

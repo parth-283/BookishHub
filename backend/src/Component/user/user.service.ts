@@ -29,7 +29,10 @@ export class UserService {
       const createdUser = new this.userModel({
         ...createUserDto,
         id: this.generateUUID(),
-        slug: createUserDto.firstName.toLowerCase()+"-"+createUserDto.lastName.toLowerCase(),
+        slug:
+          createUserDto.firstName.toLowerCase() +
+          '-' +
+          createUserDto.lastName.toLowerCase(),
         password: hashedPassword,
         role: 'user',
       });
@@ -60,11 +63,11 @@ export class UserService {
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return await this.userModel.findOne({ email }).exec();
+    return await this.userModel.findOne({ email }).populate('books').exec();
   }
 
   async findById(id: string): Promise<User | null> {
-    return await this.userModel.findById(id).exec();
+    return await this.userModel.findById(id).populate('books').exec();
   }
 
   async update(id: string, updateUserDto: any): Promise<User | null> {
