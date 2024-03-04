@@ -34,8 +34,8 @@ export default function SignIn() {
       .then((res) => {
         debugger;
         // Handle result, redirect if successful, show error otherwise
-        if (result?.error) {
-          console.error("Sign in failed:", result.error);
+        if (res?.error) {
+          console.error("Sign in failed:", res.error);
         } else {
           // Redirect user to desired page (e.g., dashboard) after successful sign-in
           window.location.href = "/";
@@ -45,8 +45,6 @@ export default function SignIn() {
         debugger;
       });
   };
-
-  console.log(watch("example"));
 
   return (
     <>

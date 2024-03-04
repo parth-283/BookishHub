@@ -14,8 +14,10 @@ import { EmailModule } from 'src/Component/email/email.module';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' },
+      secret:
+        process.env.JWT_SECRET ||
+        '54b89e9249d80f3f6b80ec4a97d2f2b9fd7c3f91697b1682ec566df6d1b27bc8',
+      signOptions: { expiresIn: '1h' },
     }),
     UserModule,
     EmailModule,

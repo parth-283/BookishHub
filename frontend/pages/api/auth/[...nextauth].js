@@ -1,9 +1,10 @@
 import NextAuth from "next-auth";
-import { Providers } from 'next-auth/providers';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 const options = {
+  secret: process.env.secret,
   providers: [
-    Providers.Credentials({
+    CredentialsProvider({
       name: "NestJS API", // Provide a name for your custom provider
       credentials: {
         email: { label: "Email", type: "email" },
