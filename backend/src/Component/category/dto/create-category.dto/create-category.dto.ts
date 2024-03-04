@@ -1,7 +1,10 @@
-// category.dto.ts
-
 export class CreateCategoryDto {
-  readonly categoryName: string;
-  readonly categoryShortDescription: string;
-  readonly unsplashImageURL: string;
+  readonly id: string;
+  readonly slug: string;
+  readonly name: string;
+  readonly description: string;
+  readonly image: string;
+  readonly isVisible?: boolean;
+  readonly status?: string;
+  readonly relatedBooksIds?: string[];
 }

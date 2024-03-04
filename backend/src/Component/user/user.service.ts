@@ -29,6 +29,7 @@ export class UserService {
       const createdUser = new this.userModel({
         ...createUserDto,
         id: this.generateUUID(),
+        slug: createUserDto.firstName.toLowerCase()+"-"+createUserDto.lastName.toLowerCase(),
         password: hashedPassword,
         role: 'user',
       });

@@ -1,4 +1,6 @@
 export class CreateUserDto {
+  id: string;
+  slug: string;
   firstName: string;
   lastName: string;
   city: string;

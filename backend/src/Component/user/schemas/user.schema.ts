@@ -9,6 +9,9 @@ export class User {
   id: string;
 
   @Prop({ required: true })
+  slug: string;
+
+  @Prop({ required: true })
   password: string;
 
   @Prop({ required: true })

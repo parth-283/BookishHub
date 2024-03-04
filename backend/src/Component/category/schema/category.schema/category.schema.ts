@@ -5,16 +5,31 @@ import { Document } from 'mongoose';
 
 export type CategoryDocument = Category & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Category {
   @Prop({ required: true })
-  categoryName: string;
+  id: string;
 
   @Prop({ required: true })
-  categoryShortDescription: string;
+  slug: string;
 
   @Prop({ required: true })
-  unsplashImageURL: string;
+  name: string;
+
+  @Prop({ required: true })
+  description: string;
+
+  @Prop({ required: true })
+  image: string;
+
+  @Prop({ default: true })
+  isVisible: boolean;
+
+  @Prop({ default: 'active' })
+  status: string;
+
+  @Prop()
+  relatedBooksIds: string[];
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
