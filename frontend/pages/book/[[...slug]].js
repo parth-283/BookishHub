@@ -1,5 +1,6 @@
 import BooksList from "@/components/BooksList";
 import { booksService } from "@/services/books.service";
+import { categoryService } from "@/services/category.service";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -64,19 +65,38 @@ const books = [
 export default function book() {
   const router = useRouter();
   const { slug } = router.query;
-  const [bokksList, setbokksList] = useState([]);
+  const [booksList, setbooksList] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(true);
 
   useEffect(() => {
-    if(isDataLoaded){getBooks();}
+    if (isDataLoaded) {
+      if (slug) {
+        getCategoryBySlug();
+      } else {
+        getBooks();
+      }
+    }
   }, []);
+
+  const getCategoryBySlug = () => {
+    debugger;
+    categoryService
+      .getCategoryBySlug(slug[0])
+      .then((res) => {
+        setbooksList(res);
+        setIsDataLoaded(false);
+      })
+      .catch((errorMessage) => {
+        console.log(errorMessage, "errorMessage");
+      });
+  };
 
   const getBooks = async () => {
     booksService
       .getBooks()
       .then((res) => {
-        setbokksList(res);
-        setIsDataLoaded(false)
+        setbooksList(res);
+        setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
         console.log(errorMessage, "errorMessage");
@@ -122,7 +142,7 @@ export default function book() {
           {/* Book cards */}
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {bokksList.map((book) => (
+              {booksList.map((book) => (
                 <BooksList key={book.id} book={book} />
               ))}
             </div>

@@ -39,7 +39,7 @@ export class BooksService {
       });
 
       const createdBook = new this.bookModel(createdbook);
- 
+
       await createdBook.save();
       this.logger.log('Book added successfully.');
 

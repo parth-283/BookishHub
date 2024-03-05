@@ -85,12 +85,17 @@ const product = [
 
 export default function Book({ book }) {
   const router = useRouter();
+  const { slug } = router.query;
   const [category, setCategory] = useState([]);
   const [isDataLoadded, setIsDataLoadded] = useState(true);
 
   useEffect(() => {
     if (isDataLoadded) {
-      getCategory();
+      if (slug) {
+        getCategoryBySlug();
+      } else {
+        getCategory();
+      }
     }
   }, []);
 
@@ -102,7 +107,20 @@ export default function Book({ book }) {
         setIsDataLoadded(false);
       })
       .catch((errorMessage) => {
-        console.log(errorMessage, "errorMessage");s
+        console.log(errorMessage, "errorMessage");
+        s;
+      });
+  };
+  const getCategoryBySlug = () => {
+    categoryService
+      .getCategoryBySlug(slug)
+      .then((res) => {
+        setCategory(res);
+        setIsDataLoadded(false);
+      })
+      .catch((errorMessage) => {
+        console.log(errorMessage, "errorMessage");
+        s;
       });
   };
 
@@ -153,9 +171,7 @@ export default function Book({ book }) {
                     />
                   </div>
                   {/* Book Title */}
-                  <h2 className="text-lg font-semibold mb-2">
-                    {item.name}
-                  </h2>
+                  <h2 className="text-lg font-semibold mb-2">{item.name}</h2>
 
                   {/* Description (optional) */}
                   <p className="text-sm text-gray-700 mb-4">

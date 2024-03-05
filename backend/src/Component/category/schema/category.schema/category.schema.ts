@@ -31,7 +31,8 @@ export class Category {
   @Prop()
   relatedBooksIds: string[];
 
-  books: [{ type: mongoose.Schema.Types.ObjectId; ref: 'books' }];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }] }) // Define books field properly
+  books: mongoose.Types.ObjectId[];
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
