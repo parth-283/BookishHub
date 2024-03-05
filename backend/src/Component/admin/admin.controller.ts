@@ -13,7 +13,9 @@ import { CreateBookDto } from '../books/dto/create-book.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto/create-user.dto';
 import { CreateContactDto } from '../contact/dto/create-contact.dto/create-contact.dto';
 import { UpdateContactDto } from '../contact/dto/update-contact.dto/update-contact.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('admin')
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

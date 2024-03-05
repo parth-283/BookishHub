@@ -11,7 +11,9 @@ import {
 import { CreateBookDto } from './dto/create-book.dto';
 import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('books')
 @Controller('books')
 export class BooksController {
   private readonly logger = new Logger(BooksController.name);

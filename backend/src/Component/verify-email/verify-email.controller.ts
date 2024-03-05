@@ -2,7 +2,9 @@
 
 import { Controller, Get, Query } from '@nestjs/common';
 import { VerificationService } from './verify-email.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('verify-email')
 @Controller('verify-email')
 export class VerificationController {
   constructor(private readonly verificationService: VerificationService) {}

@@ -7,7 +7,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { ChangePasswordDto } from './dto/change-password-dto/change-password.dto';
 import { User } from 'src/Component/user/schemas/user.schema';
 import { ResetPasswordDto } from './dto/reset-password-dto/reset-password.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

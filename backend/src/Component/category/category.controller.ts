@@ -12,7 +12,9 @@ import {
 import { CategoryService } from './category.service';
 import { Category } from './schema/category.schema/category.schema';
 import { CreateCategoryDto } from './dto/create-category.dto/create-category.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('categories')
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
