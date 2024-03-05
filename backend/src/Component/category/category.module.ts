@@ -4,7 +4,11 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
-import { Category, CategorySchema } from './schema/category.schema/category.schema';
+import {
+  Category,
+  CategorySchema,
+} from './schema/category.schema/category.schema';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -14,5 +18,7 @@ import { Category, CategorySchema } from './schema/category.schema/category.sche
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
+
+  exports: [CategoryService, MongooseModule],
 })
 export class CategoryModule {}

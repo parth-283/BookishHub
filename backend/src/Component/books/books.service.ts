@@ -37,8 +37,9 @@ export class BooksService {
         id: this.generateUUID(),
         slug: slug,
       });
-      const createdBook = new this.bookModel(createdbook);
 
+      const createdBook = new this.bookModel(createdbook);
+ 
       await createdBook.save();
       this.logger.log('Book added successfully.');
 
