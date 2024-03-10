@@ -4,6 +4,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -17,6 +18,7 @@ let navigation = [
 ];
 
 export default function Header() {
+  const session = useSession()
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
 

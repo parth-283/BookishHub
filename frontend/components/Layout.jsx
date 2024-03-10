@@ -3,22 +3,35 @@ import Header from "./Header";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import { CustomProvider } from "rsuite";
 import Footer from "./Footer";
+import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
+  const router = useRouter();
+  let ishideHeader = [
+    "/login",
+    "/forgot-password",
+    "/reset-password",
+    "/signup",
+    "/signin",
+  ];
   return (
     <>
-      <header>
-        <Header />
-      </header>
+      {!ishideHeader.includes(router.asPath) && (
+        <header>
+          <Header />
+        </header>
+      )}
       <div>
         <main>
           {" "}
           <CustomProvider>{children}</CustomProvider>
         </main>
       </div>
-      <footer>
-        <Footer />
-      </footer>
+      {!ishideHeader.includes(router.asPath) && (
+        <footer>
+          <Footer />
+        </footer>
+      )}
     </>
   );
 };

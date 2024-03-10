@@ -84,15 +84,15 @@ function logout() {
 
 function changePassword(data) {
   return fetchWrapper
-    .post(`${baseUrl}/Account/ChangePassword`, data)
+    .post(`${baseUrl}/auth/chnage-password`, data)
     .then((user) => {
       return user;
     });
 }
 
-function forgetPassword(data) {
+function forgetPassword(email) {
   return fetchWrapper
-    .postWithoutToken(`${baseUrl}/Account/ForgetPassword?email=${data}`)
+    .postWithoutToken(`${baseUrl}/auth/forget-password/${email}`)
     .then((user) => {
       return user;
     });
@@ -100,7 +100,7 @@ function forgetPassword(data) {
 
 function resetPassword(data) {
   return fetchWrapper
-    .postWithoutToken(`${baseUrl}/Account/ResetPassword`, data)
+    .postWithoutToken(`${baseUrl}/auth/reset-password`, data)
     .then((user) => {
       return user;
     });
@@ -130,9 +130,9 @@ function reSendVerificationEmail(email) {
     });
 }
 
-function verifyEmail(data) {
+function verifyEmail(token) {
   return fetchWrapper
-    .postWithoutToken(`${baseUrl}/Account/VerifyEmail`, data)
+    .postWithoutToken(`${baseUrl}/api/verify-email?token=${token}`)
     .then((user) => {
       return user;
     });

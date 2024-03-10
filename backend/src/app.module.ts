@@ -14,7 +14,6 @@ import { ContactService } from './component/contact/contact.service';
 import { ContactController } from './component/contact/contact.controller';
 import { ContactModule } from './component/contact/contact.module';
 import * as dotenv from 'dotenv';
-import { PasswordResetUtil } from './utils/password-reset.util';
 import { CategoryModule } from './component/category/category.module';
 dotenv.config();
 

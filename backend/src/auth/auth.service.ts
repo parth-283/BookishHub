@@ -3,6 +3,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -16,6 +17,8 @@ import { PasswordResetUtil } from 'src/utils/password-reset.util';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -49,30 +52,53 @@ export class AuthService {
   }
 
   async changePassword(
-    id: string,
+    email: string,
     changePasswordDto: ChangePasswordDto,
-  ): Promise<void> {
-    const { oldPassword, newPassword } = changePasswordDto;
-    const user = await this.userService.findById(id);
+  ): Promise<object> {
+    try {
+      this.logger.log(`Requested for change password by email: ${email}`);
 
-    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
-    if (!isPasswordValid) {
-      throw new BadRequestException('Old password is incorrect');
+      const { oldPassword, newPassword } = changePasswordDto;
+      const user = await this.userService.findById(email);
+
+      const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+      if (!isPasswordValid) {
+        throw new BadRequestException('Old password is incorrect');
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      this.logger.log(`Your password updated succeefully`);
+
+      user.password = hashedPassword;
+
+      await (user as any).save();
+
+      return { isSuccess: true, data: true };
+    } catch (error) {
+      this.logger.error(`Error when change password error: ${error}`);
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    await (user as any).save();
   }
 
-  async forgetPassword(email: string): Promise<void> {
-    const user = await this.userService.findOneByEmail(email);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+  async forgetPassword(email: string): Promise<object> {
+    try {
+      this.logger.log(`Try for forgot-password emailId: ${email}`);
 
-    const resetToken = this.passwordResetUtil.generateResetToken(user);
-    await this.passwordResetUtil.sendResetEmail(email, resetToken);
+      const user = await this.userService.findOneByEmail(email);
+      if (!user) {
+        this.logger.log(`Email id is not found in system!`);
+        throw new NotFoundException('User not found');
+      }
+
+      const resetToken = this.passwordResetUtil.generateResetToken(user);
+
+      this.logger.log(`Sending email for reset password: ${email}`);
+      await this.passwordResetUtil.sendResetEmail(email, resetToken);
+
+      return { isSuccess: true, data: true };
+    } catch (error) {
+      this.logger.log(`Error when reset-email error: ${error}`);
+    }
   }
 
   async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
@@ -86,19 +112,33 @@ export class AuthService {
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
-    const { email, newPassword, token } = resetPasswordDto;
-    const user = await this.userService.findOneByEmail(email);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    try {
+      const { newPassword, token } = resetPasswordDto;
 
-    if (!(await this.passwordResetUtil.verifyResetToken(user, token))) {
-      throw new UnauthorizedException('Invalid password reset token');
-    }
+      const tokenExtrectUser =
+        await this.passwordResetUtil.decodeResetToken(token);
 
-    // Reset user's password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    await (user as any).save();
+      const user = await this.userService.findOneByEmail(
+        tokenExtrectUser?.email,
+      );
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (!(await this.passwordResetUtil.verifyResetToken(user, token))) {
+        throw new UnauthorizedException('Invalid password reset token');
+      }
+
+      // Reset user's password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      this.logger.log(`Password updated `);
+
+      user.password = hashedPassword;
+      await (user as any).save();
+    } catch (error) {
+      this.logger.error(`Error when reset-email error: ${error}`);
+    }
   }
 }

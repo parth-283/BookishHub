@@ -2,6 +2,7 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { BookDocument } from 'src/Component/books/schemas/book.schema';
 
 @Schema({ timestamps: true })
 export class User {
@@ -50,7 +51,8 @@ export class User {
   @Prop()
   profileImage: string;
 
-  books: [{ type: mongoose.Schema.Types.ObjectId; ref: 'books' }];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }] })
+  books: BookDocument[];
 
   @Prop({ type: [String], default: [] }) // Array of strings for comments
   comments: string[];

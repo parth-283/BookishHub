@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class EmailService {
+  private readonly logger = new Logger(EmailService.name);
   private readonly transporter: nodemailer.Transporter;
 
   constructor() {
@@ -34,9 +35,9 @@ export class EmailService {
         html: message,
       });
 
-      console.log('Welcome email sent successfully');
+      this.logger.log(`Wellcome email send successfully.`);
     } catch (error) {
-      console.error('Error sending welcome email:', error);
+      this.logger.log(`Error on reset email error:${error}`);
       throw error;
     }
   }
@@ -60,9 +61,9 @@ export class EmailService {
         html: message,
       });
 
-      console.log('Password reset email sent successfully');
+      this.logger.log(`Password reset email sent successfully.`);
     } catch (error) {
-      console.error('Error sending password reset email:', error);
+      this.logger.log(`Error on reset email error:${error}`);
       throw error;
     }
   }

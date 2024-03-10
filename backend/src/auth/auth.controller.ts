@@ -1,6 +1,6 @@
 // auth.controller.ts
 
-import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-dto/login-dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,11 +27,11 @@ export class AuthController {
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<void> {
     const user: User = req.user;
-    await this.authService.changePassword(user.id, changePasswordDto);
+    await this.authService.changePassword(user.email, changePasswordDto);
   }
 
-  @Post('forget-password')
-  async forgetPassword(@Body('email') email: string): Promise<void> {
+  @Post('forget-password/:email')
+  async forgetPassword(@Param('email') email: string): Promise<void> {
     await this.authService.forgetPassword(email);
   }
 

@@ -39,10 +39,10 @@ export class UserService {
 
       this.logger.log('Create new user with id:', createdUser.id);
       // Send welcome email with verification URL
-      // await this.emailService.sendWelcomeEmail(
-      //   createUserDto.email,
-      //   process.env.JWT_SECRET,
-      // );
+      await this.emailService.sendWelcomeEmail(
+        createUserDto.email,
+        process.env.JWT_SECRET,
+      );
 
       return await createdUser.save();
     } catch (error) {

@@ -32,17 +32,16 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    if (!errors) {
-      await accountService
-        .register(data)
-        .then((res) => {
-          router.push("/signin");
-        })
-        .catch((errorMessage) => {
-          setShowAlert(true);
-          setIsServerError(errorMessage);
-        });
-    }
+    debugger;
+    await accountService
+      .register(data)
+      .then((res) => {
+        router.push("/signin");
+      })
+      .catch((errorMessage) => {
+        setShowAlert(true);
+        setIsServerError(errorMessage);
+      });
   };
 
   return (
@@ -59,8 +58,12 @@ export default function SignUp() {
             <div className="container mx-auto">
               {showAlert && (
                 <Alert
-                  type="error"
-                  message={isServerError}
+                  type={isServerError ? "error" : "success"}
+                  message={
+                    isServerError
+                      ? isServerError
+                      : "User register successfully."
+                  }
                   onClose={handleClose}
                 />
               )}

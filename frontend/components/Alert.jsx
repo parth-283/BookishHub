@@ -25,7 +25,7 @@ const Alert = ({ type, message, onClose }) => {
   }
 
   return (
-    <div className={`flex items-center justify-between px-4 py-2 mb-4 border-l-4 ${bgColor} border-${type}-500`}>
+    <div className={` rounded-md flex items-center justify-between px-4 py-2 mb-4 border-l-4 ${bgColor} border-${type}-500`}>
       <div className="flex items-center">
         <span className="mr-2">{icon}</span>
         <p className={`text-${type}-800`}>{message}</p>

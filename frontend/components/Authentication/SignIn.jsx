@@ -1,9 +1,10 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { signIn } from "next-auth/react";
+import Alert from "../Alert";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -11,6 +12,9 @@ const validationSchema = yup.object().shape({
 });
 
 export default function SignIn() {
+  const [isServerError, setIsServerError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const {
     register,
     handleSubmit,
@@ -19,6 +23,10 @@ export default function SignIn() {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  const handleClose = () => {
+    setShowAlert(false);
+  };
 
   const onSubmit = async (data) => {
     console.log(data, errors);
@@ -35,14 +43,16 @@ export default function SignIn() {
         debugger;
         // Handle result, redirect if successful, show error otherwise
         if (res?.error) {
-          console.error("Sign in failed:", res.error);
+          setShowAlert(true);
+          setIsServerError(res?.error);
         } else {
           // Redirect user to desired page (e.g., dashboard) after successful sign-in
           window.location.href = "/";
         }
       })
       .catch((errorMessage) => {
-        debugger;
+        setShowAlert(true);
+        setIsServerError(errorMessage);
       });
   };
 
@@ -57,6 +67,18 @@ export default function SignIn() {
 
         <div className="my-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="container mx-auto">
+              {showAlert && (
+                <Alert
+                  type={isServerError ? "error" : "success"}
+                  message={
+                    isServerError ? isServerError : "Signin successfully."
+                  }
+                  onClose={handleClose}
+                />
+              )}
+            </div>
+
             <div>
               <label
                 htmlFor="email"
@@ -89,7 +111,7 @@ export default function SignIn() {
                 </label>
                 <div className="text-sm">
                   <Link
-                    href="#"
+                    href="/forgot-password"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
