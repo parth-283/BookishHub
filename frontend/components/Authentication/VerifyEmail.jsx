@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Alert from "../Alert";
+import { accountService } from "@/services/account.service";
 
 const VerifyEmail = () => {
   const router = useRouter();
@@ -21,8 +22,7 @@ const VerifyEmail = () => {
       }
 
       try {
-        await accountService
-          .verifyEmail(token)
+        await accountService.verifyEmail(token)
           .then((res) => {
             if (res.ok) {
               setIsLoading(false);

@@ -7,12 +7,21 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}`;
 export const booksService = {
   getBooks,
   getBookBySlug,
+  getByRatings,
 };
 
 function getBooks() {
   return fetchWrapper.getWithoutToken(`${baseUrl}/books`).then((result) => {
     return result;
   });
+}
+
+function getByRatings() {
+  return fetchWrapper
+    .getWithoutToken(`${baseUrl}/books/getByRatings`)
+    .then((result) => {
+      return result;
+    });
 }
 
 function getBookBySlug(slug) {

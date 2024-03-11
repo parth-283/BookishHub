@@ -78,15 +78,20 @@ export class BooksService {
   }
 
   async findAll(): Promise<Book[]> {
-    return this.bookModel.find().exec();
+    return await this.bookModel.find().exec();
   }
 
   async findOne(id: string): Promise<Book | null> {
-    return this.bookModel.findById(id).exec();
+    return await this.bookModel.findById(id).exec();
   }
 
   async findBySlug(slug: string): Promise<Book | null> {
-    return this.bookModel.findOne({ slug }).exec();
+    return await this.bookModel.findOne({ slug }).exec();
+  }
+
+  async findByRatings(): Promise<Book[]> {
+    this.logger.log('Geting books data by ratings.');
+    return await this.bookModel.find().limit(6).exec();
   }
 
   async update(id: string, updateBookDto: CreateBookDto): Promise<Book | null> {

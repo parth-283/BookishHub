@@ -132,7 +132,7 @@ function reSendVerificationEmail(email) {
 
 function verifyEmail(token) {
   return fetchWrapper
-    .postWithoutToken(`${baseUrl}/api/verify-email?token=${token}`)
+    .postWithoutToken(`${baseUrl}/verify-email?token=${token}`)
     .then((user) => {
       return user;
     });

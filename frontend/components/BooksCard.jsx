@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { booksService } from "@/services/books.service";
 import Image from "next/image";
 
 const posts = [
@@ -72,6 +74,24 @@ const posts = [
 ];
 
 export default function BooksCard() {
+  const [booksBanner, setBooksBanner] = useState([]);
+
+  useEffect(() => {
+    getBooksBanner();
+  }, []);
+
+  const getBooksBanner = async () => {
+    await booksService
+      .getByRatings()
+      .then((res) => {
+        debugger;
+        setBooksBanner(res);
+      })
+      .catch((errorMessage) => {
+        console.log(errorMessage);
+      });
+  };
+
   return (
     <section className="secound-section">
       <div className="py-24 sm:py-32 ">

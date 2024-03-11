@@ -41,6 +41,11 @@ export class BooksController {
     return this.booksService.findBySlug(slug);
   }
 
+  @Get('getByRatings')
+  async findByRatings(): Promise<Book[]> {
+    return this.booksService.findByRatings();
+  }
+
   @Put(':id')
   async update(
     @Param('id') id: string,
