@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { booksService } from "@/services/books.service";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const posts = [
   {
@@ -75,6 +76,15 @@ const posts = [
 
 export default function BooksCard() {
   const [booksBanner, setBooksBanner] = useState([]);
+  const { data: session, status } = useSession();
+
+  if (session && status) {
+    const { user, accessToken, role } = session;
+    debugger;
+    // Access user data, access token, and role
+  } else {
+    // User is not authenticated
+  }
 
   useEffect(() => {
     getBooksBanner();

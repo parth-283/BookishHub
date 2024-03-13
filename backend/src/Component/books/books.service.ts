@@ -82,7 +82,8 @@ export class BooksService {
   }
 
   async findOne(id: string): Promise<Book | null> {
-    return await this.bookModel.findById(id).exec();
+    // return await this.bookModel.findById({ _id: id }).exec();
+    return null;
   }
 
   async findBySlug(slug: string): Promise<Book | null> {
@@ -91,7 +92,13 @@ export class BooksService {
 
   async findByRatings(): Promise<Book[]> {
     this.logger.log('Geting books data by ratings.');
-    return await this.bookModel.find().limit(6).exec();
+    // return await this.bookModel.find().limit(6).exec();
+    const books = await this.bookModel
+      .find()
+      .sort({ rating: -1 })
+      .limit(8)
+      .exec();
+    return books;
   }
 
   async update(id: string, updateBookDto: CreateBookDto): Promise<Book | null> {

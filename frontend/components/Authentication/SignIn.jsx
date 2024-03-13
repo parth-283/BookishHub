@@ -41,6 +41,7 @@ export default function SignIn() {
     })
       .then((res) => {
         debugger;
+        localStorage.setItem("user", JSON.stringify(res));
         // Handle result, redirect if successful, show error otherwise
         if (res?.error) {
           setShowAlert(true);

@@ -32,7 +32,7 @@ export class BooksController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Book> {
+  async findOne(@Param('id') id: string): Promise<Book | null> {
     return this.booksService.findOne(id);
   }
 

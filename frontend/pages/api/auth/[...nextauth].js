@@ -24,8 +24,16 @@ const options = {
         );
 
         if (response.ok) {
-          // If authentication is successful, return user data
-          return response.json();
+          const data = await response.json();
+
+          // Return the access token, role, and additional user data
+          return {
+            accessToken: data.accessToken,
+            role: data.role,
+            // Add additional user data fields here
+            // userId: data.userId,
+            // email: data.email,
+          };
         } else {
           // If authentication fails, return null
           return null;

@@ -18,7 +18,7 @@ let navigation = [
 ];
 
 export default function Header() {
-  const session = useSession()
+  const session = useSession();
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
 
@@ -71,7 +71,7 @@ export default function Header() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {isLogin ? (
+                {session.status == "authenticated" ? (
                   <>
                     <button
                       type="button"

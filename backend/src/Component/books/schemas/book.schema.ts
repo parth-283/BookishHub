@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEnum } from 'class-validator';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { BookGenre } from '../dto/genre-book.dto';
 import { BookFormats } from '../dto/format-book.dto';
 import { BookDimensions } from '../dto/dimension-book.dto';
-import mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Book extends Document {
@@ -73,9 +72,11 @@ export class Book extends Document {
   @Prop({ required: true, default: '' })
   country: string;
 
-  users: { type: mongoose.Schema.Types.ObjectId; ref: 'users' };
+  @Prop({ type: Types.ObjectId, ref: 'users' })
+  users: Types.ObjectId;
 
-  categories: { type: mongoose.Schema.Types.ObjectId; ref: 'categories' };
+  @Prop({ type: Types.ObjectId, ref: 'categories' })
+  categories: Types.ObjectId;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
