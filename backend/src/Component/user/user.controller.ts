@@ -8,11 +8,15 @@ import {
   Param,
   Put,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor, MulterModuleOptions } from '@nestjs/platform-express';
+import { multerOptions } from 'src/utils/multer.config';
 
 @ApiTags('users')
 @Controller('users')
@@ -24,9 +28,22 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<User | null> {
-    return this.userService.findById(id);
+  @Post('/image/:id')
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  async uploadFile(
+    @Param('id') id: string,
+    @UploadedFile() file: MulterModuleOptions,
+  ): Promise<any> {
+    const uploadedImage = await this.userService.uploadFile(id, file);
+    return uploadedImage;
+  }
+
+  @Get(':slug')
+  async findOne(
+    @Param('slug') slug: string,
+  ): Promise<{ data: User; isSuccess: boolean }> {
+    const userData = await this.userService.findBySlug(slug);
+    return { data: userData, isSuccess: true };
   }
 
   @Get('email/:email')

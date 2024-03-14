@@ -6,6 +6,8 @@ import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { EmailService } from '../email/email.service';
 import { v4 as uuidv4 } from 'uuid';
+import { cloudinary } from 'src/utils/cloudinary.config';
+import { MulterModuleOptions } from '@nestjs/platform-express';
 
 @Injectable()
 export class UserService {
@@ -62,12 +64,39 @@ export class UserService {
     }
   }
 
+  async uploadFile(id: string, file: MulterModuleOptions): Promise<any> {
+    const uploadedImage = await cloudinary.uploader.upload(file.path);
+
+    console.log(uploadedImage, 'uploadedImage');
+
+    await this.userModel
+      .findByIdAndUpdate(id, { profileImage: file }, { new: true })
+      .exec();
+
+    return uploadedImage;
+  }
+
   async findOneByEmail(email: string): Promise<User | null> {
     return await this.userModel.findOne({ email }).populate('books').exec();
   }
 
+  async findBySlug(slug: string): Promise<User> {
+    try {
+      this.logger.log(`Get user data by slug: ${slug}`);
+
+      return await this.userModel.findOne({ slug }).populate('books').exec();
+    } catch (error) {
+      this.logger.log(`Error in getBySlug error: ${error}`);
+
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async findById(id: string): Promise<User | null> {
-    return await this.userModel.findById(id).populate('books').exec();
+    return await this.userModel.findOne({ _id: id });
   }
 
   async update(id: string, updateUserDto: any): Promise<User | null> {

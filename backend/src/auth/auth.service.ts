@@ -59,7 +59,7 @@ export class AuthService {
       this.logger.log(`Requested for change password by email: ${email}`);
 
       const { oldPassword, newPassword } = changePasswordDto;
-      const user = await this.userService.findById(email);
+      const user = await this.userService.findOneByEmail(email);
 
       const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
       if (!isPasswordValid) {

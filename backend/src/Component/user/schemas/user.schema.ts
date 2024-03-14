@@ -51,6 +51,9 @@ export class User {
   @Prop()
   profileImage: string;
 
+  @Prop()
+  coverImage: string;
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }] })
   books: BookDocument[];
 

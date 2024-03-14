@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["@nestjs/platform-express"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
