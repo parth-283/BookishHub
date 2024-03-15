@@ -16,7 +16,6 @@ import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor, MulterModuleOptions } from '@nestjs/platform-express';
-import { multerOptions } from 'src/utils/multer.config';
 
 @ApiTags('users')
 @Controller('users')
@@ -29,14 +28,20 @@ export class UserController {
   }
 
   @Post('/image/:id')
-  @UseInterceptors(FileInterceptor('file', multerOptions))
-  async uploadFile(
-    @Param('id') id: string,
-    @UploadedFile() file: MulterModuleOptions,
-  ): Promise<any> {
-    const uploadedImage = await this.userService.uploadFile(id, file);
-    return uploadedImage;
+  @UseInterceptors(FileInterceptor('file'))
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    return this.userService.uploadFile(file);
   }
+
+  // @Post('/image/:id')
+  // @UseInterceptors(FileInterceptor('file', multerOptions))
+  // async uploadFile(
+  //   @Param('id') id: string,
+  //   @UploadedFile() file: MulterModuleOptions,
+  // ): Promise<any> {
+  //   const uploadedImage = await this.userService.uploadFile(id, file);
+  //   return uploadedImage;
+  // }
 
   @Get(':slug')
   async findOne(

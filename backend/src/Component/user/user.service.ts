@@ -6,8 +6,8 @@ import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { EmailService } from '../email/email.service';
 import { v4 as uuidv4 } from 'uuid';
-import { cloudinary } from 'src/utils/cloudinary.config';
-import { MulterModuleOptions } from '@nestjs/platform-express';
+import { v2 as cloudinary } from 'cloudinary';
+const streamifier = require('streamifier');
 
 @Injectable()
 export class UserService {
@@ -64,16 +64,28 @@ export class UserService {
     }
   }
 
-  async uploadFile(id: string, file: MulterModuleOptions): Promise<any> {
-    const uploadedImage = await cloudinary.uploader.upload(file.path);
+  // async uploadFile(id: string, file: MulterModuleOptions): Promise<any> {
+  //   const uploadedImage = await cloudinary.uploader.upload(file.path);
 
-    console.log(uploadedImage, 'uploadedImage');
+  //   console.log(uploadedImage, 'uploadedImage');
 
-    await this.userModel
-      .findByIdAndUpdate(id, { profileImage: file }, { new: true })
-      .exec();
+  //   await this.userModel
+  //     .findByIdAndUpdate(id, { profileImage: file }, { new: true })
+  //     .exec();
 
-    return uploadedImage;
+  //   return uploadedImage;
+  // }
+  uploadFile(file: Express.Multer.File): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+
+      streamifier.createReadStream(file.buffer).pipe(uploadStream);
+    });
   }
 
   async findOneByEmail(email: string): Promise<User | null> {

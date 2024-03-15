@@ -49,7 +49,7 @@ export class User {
   about: string;
 
   @Prop()
-  profileImage: string;
+  profileImage: [];
 
   @Prop()
   coverImage: string;
