@@ -36,7 +36,7 @@ export class Book extends Document {
   isbn: string;
 
   @Prop({ required: true, default: '' })
-  Publisher: string;
+  publisher: string;
 
   @Prop({ required: true, default: 0 })
   totalPages: number;

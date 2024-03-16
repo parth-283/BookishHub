@@ -46,8 +46,10 @@ export class BooksService {
       // Add book ID to user's list of books
       this.logger.log('Add book on user by id:', userId);
 
+      let user = await this.userModel.findOne({ id: userId });
+
       await this.userModel.findByIdAndUpdate(
-        { id: userId },
+        { _id: user._id },
         {
           $push: { books: createdBook._id },
         },
@@ -55,8 +57,10 @@ export class BooksService {
 
       // Add book ID to category's list of books
       this.logger.log('Add book on category by id:', categoryId);
+      let category = await this.categoryModel.findOne({ id: categoryId });
+
       await this.categoryModel.findByIdAndUpdate(
-        { id: categoryId },
+        { _id: category._id },
         {
           $push: { books: createdBook._id },
         },
