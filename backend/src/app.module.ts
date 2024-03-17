@@ -15,6 +15,7 @@ import { ContactController } from './component/contact/contact.controller';
 import { ContactModule } from './component/contact/contact.module';
 import * as dotenv from 'dotenv';
 import { CategoryModule } from './component/category/category.module';
+import { ImagesModule } from './component/images/images.module';
 dotenv.config();
 
 @Module({
@@ -30,6 +31,7 @@ dotenv.config();
     AdminModule,
     ContactModule,
     CategoryModule,
+    ImagesModule,
   ],
   controllers: [AppController, ContactController],
   providers: [AppService, ContactService],

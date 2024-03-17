@@ -7,6 +7,7 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}`;
 
 export const userService = {
   GetUserProfile,
+  UpdateUserProfile,
 };
 
 function GetUserProfile(slug) {
@@ -21,27 +22,20 @@ function GetUserHeaderInfo() {
   });
 }
 
-function UpdateUserProfile(id, data) {
+function UpdateUserProfile(id, file, coverImage) {
   const body = new FormData();
-  body.append("file", data.file);
-  body.append("profilePictureUrl", data.fileUrl);
-  body.append("email", data.email);
-  body.append("firstName", data.firstName);
-  body.append("lastName", data.lastName);
-  body.append("aboutMe", data.aboutMe);
-  // body.append("country", data.country);
-  body.append("city", data.city);
-  body.append("address", data.address);
-  body.append("certificateLanguage", data.certificateLanguage);
-  body.append("socialMedia.website", data.website);
-  body.append("socialMedia.youtube", data.youtube);
-  body.append("socialMedia.facebook", data.facebook);
-  body.append("socialMedia.twitter", data.twitter);
-  body.append("socialMedia.linkedIn", data.linkedIn);
-  body.append("socialMedia.instagram", data.instagram);
+  body.append("file", file);
+  // body.append("profilePictureUrl", data.fileUrl);
+  // body.append("email", data.email);
+  // body.append("firstName", data.firstName);
+  // body.append("lastName", data.lastName);
+  // body.append("aboutMe", data.aboutMe);
+  // body.append("city", data.city);
+  // body.append("address", data.address);
+  // body.append("certificateLanguage", data.certificateLanguage);
 
   return fetchWrapper
-    .postWithFormData(`${baseUrl}/User/UpdateUserProfile`, body)
+    .postWithFormData(`${baseUrl}/users/image/${coverImage}/${id}`, body)
     .then((user) => {
       return user;
     });

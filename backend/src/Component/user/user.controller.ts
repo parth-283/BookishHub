@@ -10,12 +10,15 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { FileInterceptor, MulterModuleOptions } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
+import { multerOptions } from 'src/utils/multer.config';
 
 @ApiTags('users')
 @Controller('users')
@@ -27,21 +30,25 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Post('/image/:id')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadImage(@UploadedFile() file: Express.Multer.File) {
-    return this.userService.uploadFile(file);
-  }
+  // @UseGuards(JwtAuthGuard)
+  @Post('image/:coverImage/:id')
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  async uploadImage(
+    @Param('id') id: string,
+    @Param('coverImage') coverImage: boolean,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    try {
+      if (!file) {
+        throw new Error('No file uploaded');
+      }
 
-  // @Post('/image/:id')
-  // @UseInterceptors(FileInterceptor('file', multerOptions))
-  // async uploadFile(
-  //   @Param('id') id: string,
-  //   @UploadedFile() file: MulterModuleOptions,
-  // ): Promise<any> {
-  //   const uploadedImage = await this.userService.uploadFile(id, file);
-  //   return uploadedImage;
-  // }
+      const result = await this.userService.uploadImage(id, file, coverImage);
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
 
   @Get(':slug')
   async findOne(

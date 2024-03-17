@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { userService } from "@/services/user.service";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const users = [
   {
@@ -55,10 +57,24 @@ const books = [
   // Add more books as needed
 ];
 
-const UserProfilePage = ({ user, userBooks }) => {
+const UserProfilePage = () => {
   const router = useRouter();
   const { slug } = router.query;
   const [userProfile, setuserProfile] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const formik = useFormik({
+    initialValues: {
+      image: null,
+    },
+    validationSchema: Yup.object().shape({
+      image: Yup.mixed().required("Please upload an image"),
+    }),
+    onSubmit: async (values) => {
+      handleSubmit(values);
+    },
+  });
 
   useEffect(() => {
     getUserPrifleData();
@@ -73,47 +89,163 @@ const UserProfilePage = ({ user, userBooks }) => {
       .catch((errorMessage) => {});
   };
 
+  const handleUploadImage = async (image, coverImage) => {
+    let profileImage = await userService.UpdateUserProfile(
+      userProfile.id,
+      image,
+      coverImage
+    );
+    getUserPrifleData()
+    console.log(profileImage, "profileImage");
+  };
+
+  const handleImageUpload = (e, coverImage) => {
+    const file = e.target.files[0];
+    handleUploadImage(file, coverImage);
+  };
+
+  const handleEdit = (e) => {
+    setIsEdit(true);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         {/* Cover Image */}
         <div className="relative">
+          {/* Cover Image */}
           <img
             src={
-              userProfile?.coverImage ||
+              userProfile?.coverImage?.secure_url ||
               "https://source.unsplash.com/featured/800x200/?user,cover"
             }
             alt="Cover"
             className="w-full h-auto"
           />
+          {/* Edit icon for Cover Image */}
+          {isEdit && (
+            <>
+              <div
+                className="absolute bottom-0 right-0 flex items-center justify-center cursor-pointer bg-white rounded-full p-1 mr-8 mb-8"
+                onClick={() => fileInputRef.current.click()}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-gray-600"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 5a1 1 0 00-1-1h-3.586l-.707-.707A1 1 0 0012.586 3H7.414a1 1 0 00-.707.293L5.707 4.293 2.707 1.293A1 1 0 002 2v13a1 1 0 001 1h14a1 1 0 001-1V5zM6 16H4v-2h2v2zM4 4V2h4.586l1 1H15a1 1 0 011 1v9h-2V8a1 1 0 00-1-1h-1V5a1 1 0 00-1-1H7.414l-1-1H4v2H2v12h2v-2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              {/* Hidden file input */}
+              <input
+                type="file"
+                name="image"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={(e) => handleImageUpload(e, true)}
+              />
+            </>
+          )}
+
+          {/* Profile Image */}
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-8">
-            <img
-              src={
-                userProfile?.profileImage ||
-                "https://source.unsplash.com/featured/800x200/?user,profileImage"
-              }
-              alt="User"
-              className="w-32 h-32 rounded-full border-4 border-white shadow-md"
-            />
+            <div className="relative w-32 h-32 rounded-full border-4 border-white shadow-md">
+              <img
+                src={
+                  userProfile?.profileImage?.secure_url ||
+                  "https://source.unsplash.com/featured/800x200/?user,profileImage"
+                }
+                alt="User"
+                className="w-full h-full rounded-full object-cover"
+              />
+              {/* Edit icon for Profile Image */}
+              {isEdit && (
+                <>
+                  <div
+                    className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                    onClick={() => fileInputRef.current.click()}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8 text-gray-600"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 5a1 1 0 00-1-1h-3.586l-.707-.707A1 1 0 0012.586 3H7.414a1 1 0 00-.707.293L5.707 4.293 2.707 1.293A1 1 0 002 2v13a1 1 0 001 1h14a1 1 0 001-1V5zM6 16H4v-2h2v2zM4 4V2h4.586l1 1H15a1 1 0 011 1v9h-2V8a1 1 0 00-1-1h-1V5a1 1 0 00-1-1H7.414l-1-1H4v2H2v12h2v-2z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  {/* Hidden file input */}
+                  <input
+                    type="file"
+                    name="image"
+                    ref={fileInputRef}
+                    className="hidden"
+                    onChange={(e) => handleImageUpload(e, false)}
+                  />
+                </>
+              )}
+            </div>
           </div>
+
+          {/* Hidden file input for Cover Image */}
+          {isEdit && (
+            <input
+              type="file"
+              name="coverImage"
+              className="hidden"
+              onChange={(e) => handleCoverImageChange(e)} // Add your function to handle cover image change
+            />
+          )}
         </div>
 
         {/* User Data */}
         <div className="p-6 bg-gray-100 rounded-lg">
-          <h1 className="text-3xl font-semibold mb-4">
-            {userProfile?.firstName} {userProfile?.lastName}
-          </h1>
-          <p className="text-gray-800 font-semibold">{userProfile?.about}</p>
+          <div className="flex items-center justify-between">
+            <div className="mr-4">
+              <h1 className="text-3xl font-semibold mb-4">
+                {userProfile?.firstName} {userProfile?.lastName}
+              </h1>
+              <p className="text-gray-800 font-semibold">
+                {userProfile?.about}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              {/* Edit button */}
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300"
+                onClick={(e) => handleEdit(e)}
+              >
+                Edit
+              </button>
+              {/* Delete button */}
+              {/* <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300">
+                Delete
+              </button> */}
+            </div>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-gray-600 mb-2">Email:</p>
-              <p className="text-gray-800 font-semibold">{userProfile?.email}</p>
+              <p className="text-gray-800 font-semibold">
+                {userProfile?.email}
+              </p>
             </div>
             <div>
               <p className="text-gray-600 mb-2">Location:</p>
               <p className="text-gray-800 font-semibold">
-                {userProfile?.city}, {userProfile?.state}, {userProfile?.country}
+                {userProfile?.city}, {userProfile?.state},{" "}
+                {userProfile?.country}
               </p>
             </div>
             <div>
@@ -128,7 +260,9 @@ const UserProfilePage = ({ user, userBooks }) => {
             </div>
             <div>
               <p className="text-gray-600 mb-2">Phone:</p>
-              <p className="text-gray-800 font-semibold">{userProfile?.phone}</p>
+              <p className="text-gray-800 font-semibold">
+                {userProfile?.phone}
+              </p>
             </div>
             {/* <div>
               <p className="text-gray-600 mb-2">About:</p>

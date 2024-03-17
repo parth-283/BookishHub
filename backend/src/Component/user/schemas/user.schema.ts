@@ -3,6 +3,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { BookDocument } from 'src/Component/books/schemas/book.schema';
+import { ImageResponseDto } from '../dto/image-user.dto/image-user.dto';
 
 @Schema({ timestamps: true })
 export class User {
@@ -49,10 +50,10 @@ export class User {
   about: string;
 
   @Prop()
-  profileImage: [];
+  profileImage: ImageResponseDto;
 
   @Prop()
-  coverImage: string;
+  coverImage: ImageResponseDto;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }] })
   books: BookDocument[];

@@ -6,8 +6,7 @@ import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { EmailService } from '../email/email.service';
 import { v4 as uuidv4 } from 'uuid';
-import { v2 as cloudinary } from 'cloudinary';
-const streamifier = require('streamifier');
+import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class UserService {
@@ -15,6 +14,8 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly emailService: EmailService,
+
+    private readonly imagesService: ImagesService,
   ) {}
 
   generateUUID(): string {
@@ -64,28 +65,46 @@ export class UserService {
     }
   }
 
-  // async uploadFile(id: string, file: MulterModuleOptions): Promise<any> {
-  //   const uploadedImage = await cloudinary.uploader.upload(file.path);
+  async uploadImage(
+    id: string,
+    file: Express.Multer.File,
+    coverImage?: boolean,
+  ): Promise<boolean> {
+    try {
+      this.logger.log('Upload profile picture.');
+      const imageResult = await this.imagesService.uploadImage(file);
 
-  //   console.log(uploadedImage, 'uploadedImage');
+      let query;
 
-  //   await this.userModel
-  //     .findByIdAndUpdate(id, { profileImage: file }, { new: true })
-  //     .exec();
+      if (coverImage) {
+        query = { coverImage: imageResult };
+      } else {
+        query = { profileImage: imageResult };
+      }
 
-  //   return uploadedImage;
-  // }
-  uploadFile(file: Express.Multer.File): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
-        },
+      this.logger.log('Save user profile in users collection.');
+      // Update the user's profile image
+      const updatedUser = await this.userModel.updateOne({ id }, query);
+
+      if (updatedUser.matchedCount > 0 && updatedUser.acknowledged) {
+        return true;
+      } else {
+        this.logger.error(
+          `Error in upload image error: ${updatedUser.matchedCount}`,
+        );
+        throw new HttpException(
+          'Something went wrong!',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } catch (error) {
+      this.logger.error(`Error in upload image error: ${error}`);
+
+      throw new HttpException(
+        'Failed to upload image',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-
-      streamifier.createReadStream(file.buffer).pipe(uploadStream);
-    });
+    }
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
