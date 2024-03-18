@@ -31,6 +31,20 @@ export class CategoryService {
     }
   }
 
+  async getAllCategoryList(): Promise<Category[]> {
+    try {
+      return this.categoryModel
+        .find({ status: 'active' })
+        .select('name slug id status')
+        .exec();
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async findOneBySlug(slug: string): Promise<Category> {
     return this.categoryModel.findOne({ slug: slug }).populate('books').exec();
   }

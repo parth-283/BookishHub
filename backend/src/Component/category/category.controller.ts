@@ -39,6 +39,11 @@ export class CategoryController {
     return this.categoryService.findOneByID(id);
   }
 
+  @Get('categoryList')
+  categoryList(): Promise<Category[]> {
+    return this.categoryService.getAllCategoryList();
+  }
+
   @Put(':id')
   update(
     @Param('id') id: string,

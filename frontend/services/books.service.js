@@ -8,6 +8,7 @@ export const booksService = {
   getBooks,
   getBookBySlug,
   getByRatings,
+  addBook,
 };
 
 function getBooks() {
@@ -70,5 +71,26 @@ function saveCourseFeedback(data) {
     .post(`${baseUrl}/Course/SaveCourseFeedback`, data)
     .then((result) => {
       return result;
+    });
+}
+
+function addBook(data) {
+  const formData = new FormData();
+  Object.entries(data).forEach(([key, value]) => {
+    if (key === "bookImage" || key === "coverImage") {
+      formData.append(key, value[0]);
+    } else if (key === "dimensions") {
+      Object.entries(value).forEach(([dimKey, dimValue]) => {
+        formData.append(`dimensions.${dimKey}`, dimValue);
+      });
+    } else {
+      formData.append(key, value);
+    }
+  });
+
+  return fetchWrapper
+    .postWithFormData(`${baseUrl}/books`, formData)
+    .then((user) => {
+      return user;
     });
 }
