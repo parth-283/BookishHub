@@ -14,7 +14,6 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly emailService: EmailService,
-
     private readonly imagesService: ImagesService,
   ) {}
 

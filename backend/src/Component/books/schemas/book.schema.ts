@@ -29,8 +29,11 @@ export class Book extends Document {
   @Prop({ required: true })
   publicationDate: Date;
 
-  @Prop({ required: true, default: '' })
-  coverImage: string;
+  @Prop()
+  image: object;
+
+  @Prop()
+  backgroundImage: object;
 
   @Prop({ required: true, default: '' })
   isbn: string;

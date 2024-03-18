@@ -9,6 +9,7 @@ import {
   Category,
   CategoryDocument,
 } from '../category/schema/category.schema/category.schema';
+import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class BooksService {
@@ -18,6 +19,7 @@ export class BooksService {
     @InjectModel(Book.name) private bookModel: Model<BookDocument>,
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private readonly imagesService: ImagesService,
   ) {}
 
   generateUUID(): string {
@@ -25,17 +27,30 @@ export class BooksService {
     return id;
   }
 
-  async create(createBookDto: CreateBookDto): Promise<any> {
+  async create(
+    createBookDto: CreateBookDto,
+    bookImage: Express.Multer.File,
+    coverImage: Express.Multer.File,
+  ): Promise<any> {
     try {
       const { userId, categoryId } = createBookDto;
 
       const slug = createBookDto.title.toLowerCase().split(' ').join('-');
+
+      this.logger.log('Upload book picture.');
+      const bookImageResult = await this.imagesService.uploadImage(bookImage);
+
+      this.logger.log('Upload background picture.');
+      const backgroundImageResult =
+        await this.imagesService.uploadImage(coverImage);
 
       // Create a new book
       const createdbook = new this.bookModel({
         ...createBookDto,
         id: this.generateUUID(),
         slug: slug,
+        image: bookImageResult,
+        backgroundImage: backgroundImageResult,
       });
 
       const createdBook = new this.bookModel(createdbook);

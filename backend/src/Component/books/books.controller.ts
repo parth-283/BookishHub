@@ -7,12 +7,15 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
 import { ApiTags } from '@nestjs/swagger';
-
+import { FilesInterceptor } from '@nestjs/platform-express';
 @ApiTags('books')
 @Controller('books')
 export class BooksController {
@@ -21,9 +24,17 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
-  async create(@Body() createBookDto: CreateBookDto) {
+  @UseInterceptors(FilesInterceptor('images', 2)) // Allow uploading two files
+  async addBook(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Body() createBookDto: CreateBookDto,
+  ) {
     this.logger.log('Request for add book.');
-    return this.booksService.create(createBookDto);
+    const bookImage = images.find((image) => image.fieldname === 'bookImage');
+    const coverImage = images.find((image) => image.fieldname === 'coverImage');
+
+    // Pass the images to the service to handle book creation
+    return this.booksService.create(createBookDto, bookImage, coverImage);
   }
 
   @Get()
