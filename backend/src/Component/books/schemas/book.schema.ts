@@ -4,6 +4,7 @@ import { Document, Types } from 'mongoose';
 import { BookGenre } from '../dto/genre-book.dto';
 import { BookFormats } from '../dto/format-book.dto';
 import { BookDimensions } from '../dto/dimension-book.dto';
+import { ImageResponseDto } from '../dto/image-books.dto';
 
 @Schema({ timestamps: true })
 export class Book extends Document {
@@ -30,10 +31,10 @@ export class Book extends Document {
   publicationDate: Date;
 
   @Prop()
-  image: object;
+  image: ImageResponseDto;
 
   @Prop()
-  backgroundImage: object;
+  backgroundImage: ImageResponseDto;
 
   @Prop({ required: true, default: '' })
   isbn: string;

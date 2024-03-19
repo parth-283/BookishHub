@@ -9,6 +9,7 @@ import {
   Put,
   UploadedFile,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -16,6 +17,7 @@ import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
 import { ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
 @ApiTags('books')
 @Controller('books')
 export class BooksController {
@@ -23,6 +25,7 @@ export class BooksController {
 
   constructor(private readonly booksService: BooksService) {}
 
+  // @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FilesInterceptor('images', 2)) // Allow uploading two files
   async addBook(
