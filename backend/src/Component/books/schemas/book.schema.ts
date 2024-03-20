@@ -45,6 +45,9 @@ export class Book extends Document {
   @Prop({ required: true, default: 0 })
   totalPages: number;
 
+  @Prop({ required: true, default: 0 })
+  rating: number;
+
   @Prop({ required: true, default: '' })
   @IsEnum(BookFormats)
   format: BookFormats;

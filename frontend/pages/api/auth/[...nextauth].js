@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+// Define your NextAuth options
 const options = {
   secret: process.env.secret,
   providers: [
@@ -44,4 +45,7 @@ const options = {
   // Add any additional configuration options here
 };
 
-export default (req, res) => NextAuth(req, res, options);
+// Export a named function instead of an anonymous arrow function
+export default function NextAuthHandler(req, res) {
+  return NextAuth(req, res, options);
+}

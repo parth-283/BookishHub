@@ -109,8 +109,12 @@ const AddBookForm = () => {
               className="mt-1 p-2 border border-gray-300 rounded-md w-full transition duration-300 focus:outline-none focus:border-blue-500"
             >
               <option value="">Select Genre</option>
-              {categoryList.map((item) => {
-               return( <option value={item.id}>{item.name}</option>)
+              {categoryList.map((item, index) => {
+                return (
+                  <option key={index} value={item.id}>
+                    {item.name}
+                  </option>
+                );
               })}
               {/* Add options for different genres */}
             </select>

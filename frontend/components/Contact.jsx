@@ -65,9 +65,9 @@ export default function Contact() {
           Get in Touch
         </h2>
         <p className="mt-2 text-lg leading-8 text-gray-600">
-          Have questions, suggestions, or just want to say hello? We'd love to
+          {` Have questions, suggestions, or just want to say hello? We'd love to
           hear from you! Fill out the form below, and we'll get back to you as
-          soon as possible.
+          soon as possible.`}
         </p>
       </div>
       <form

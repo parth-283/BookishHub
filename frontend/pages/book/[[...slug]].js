@@ -62,7 +62,7 @@ const books = [
   },
   // Add more books as needed
 ];
-export default function book() {
+export default function Book() {
   const router = useRouter();
   const { slug } = router.query;
   const [booksList, setbooksList] = useState([]);
