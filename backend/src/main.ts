@@ -7,6 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors());
 
+  const port = process.env.PORT || 5000;
+
   const config = new DocumentBuilder()
     .setTitle('Bookishub API')
     .setDescription('The Bookishub API description')
@@ -16,6 +18,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(5000);
+  await app.listen(port);
 }
 bootstrap();
