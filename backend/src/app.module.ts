@@ -14,8 +14,8 @@ import { CategoryModule } from './Component/category/category.module';
 import { ImagesModule } from './Component/images/images.module';
 import { BooksModule } from './Component/books/books.module';
 import { UserModule } from './Component/user/user.module';
-import { ContactService } from './component/contact/contact.service';
 import { ContactController } from './Component/contact/contact.controller';
+import { ContactService } from './component/contact/contact.service';
 
 dotenv.config();
 
