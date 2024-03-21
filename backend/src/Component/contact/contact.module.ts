@@ -2,9 +2,9 @@
 
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Contact, ContactSchema } from './schemas/create-schema';
 import { ContactController } from './contact.controller';
 import { ContactService } from './contact.service';
-import { Contact, ContactSchema } from './schemas/create-schema';
 
 @Module({
   imports: [
