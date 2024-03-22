@@ -1,0 +1,37 @@
+services:
+  - name: backend
+    type: web
+    buildCommand: npm run build
+    startCommand: npm start
+    env:
+      - key: DATABASE_URL
+        fromDatabase: mongodb+srv://parth-283:qg9BXJMgJD4JDUa6@cluster0.kmwy66q.mongodb.net/bookishHub
+      - key: JWT_SECRET
+        fromDatabase: 54b89e9249d80f3f6b80ec4a97d2f2b9fd7c3f91697b1682ec566df6d1b27bc8
+      - key: PUBLIC_SECRET_KEY
+        fromDatabase: pk_test_51OpVneSFOQZhJ7AgbT8aBGH0Uc0UlZPwKftTK8i1Jc76ScbcW8KvNBYxn02z5fPOAguSTfrFEj8qe0CxvsIlAgTv00NYx5RazE
+      - key: STRIPE_SECRET_KEY
+        fromDatabase: sk_test_51OpVneSFOQZhJ7AgmYVzs5MZeQCuHeFbW94BoJcUgkTbwE8IzoQ91wEKXrjnWffzOKo8wCcpVyFCHNnvonqttcd800pKjZ36qx
+      - key: SENDGRID_API_KEY
+        fromDatabase: your_sendgrid_api_key
+      - key: EMAIL
+        fromDatabase: kp2832002@gmail.com
+      - key: PASSWORD
+        fromDatabase: hjfs jthb bovd dmrd
+      - key: CLOUDINARY_CLOUD_NAME
+        fromDatabase: personalportfolio
+      - key: CLOUDINARY_API_KEY
+        fromDatabase: 222585569627152
+      - key: CLOUDINARY_API_SECRET
+        fromDatabase: euMj20_sXn-33ZUZ2Aip77MhuSc
+    secrets:
+      - DATABASE_URL
+      - JWT_SECRET
+      - PUBLIC_SECRET_KEY
+      - STRIPE_SECRET_KEY
+      - SENDGRID_API_KEY
+      - EMAIL
+      - PASSWORD
+      - CLOUDINARY_CLOUD_NAME
+      - CLOUDINARY_API_KEY
+      - CLOUDINARY_API_SECRET

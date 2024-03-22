@@ -108,7 +108,6 @@ export default function Book({ book }) {
       })
       .catch((errorMessage) => {
         console.log(errorMessage, "errorMessage");
-        s;
       });
   };
   const getCategoryBySlug = () => {
