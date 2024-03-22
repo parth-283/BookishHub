@@ -5,6 +5,8 @@ import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Enable CORS
   app.use(cors());
 
   const port = process.env.PORT || 5000;
@@ -17,6 +19,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  app.setGlobalPrefix('/');
 
   await app.listen(port);
 }
