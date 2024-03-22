@@ -25,13 +25,13 @@ services:
       - key: CLOUDINARY_API_SECRET
         fromDatabase: euMj20_sXn-33ZUZ2Aip77MhuSc
     secrets:
-      - DATABASE_URL
-      - JWT_SECRET
-      - PUBLIC_SECRET_KEY
-      - STRIPE_SECRET_KEY
-      - SENDGRID_API_KEY
-      - EMAIL
-      - PASSWORD
-      - CLOUDINARY_CLOUD_NAME
-      - CLOUDINARY_API_KEY
-      - CLOUDINARY_API_SECRET
+      - backend/DATABASE_URL
+      - backend/JWT_SECRET
+      - backend/PUBLIC_SECRET_KEY
+      - backend/STRIPE_SECRET_KEY
+      - backend/SENDGRID_API_KEY
+      - backend/EMAIL
+      - backend/PASSWORD
+      - backend/CLOUDINARY_CLOUD_NAME
+      - backend/CLOUDINARY_API_KEY
+      - backend/CLOUDINARY_API_SECRET
