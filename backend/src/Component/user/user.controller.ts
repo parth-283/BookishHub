@@ -10,15 +10,15 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
-  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
 import { multerOptions } from 'src/utils/multer.config';
+import { Book } from '../books/schemas/book.schema';
+import { AddRatingDto } from '../books/dto/rating.book.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -61,6 +61,15 @@ export class UserController {
   @Get('email/:email')
   async findOneByEmail(@Param('email') email: string): Promise<User | null> {
     return await this.userService.findOneByEmail(email);
+  }
+
+  @Post('books/:bookId/ratings')
+  async addRating(
+    @Param('bookId') bookId: string,
+    @Body() ratingDto: AddRatingDto,
+  ): Promise<Book> {
+    const { userId, rating } = ratingDto;
+    return this.userService.addBookRating(bookId, userId, rating);
   }
 
   @Put(':id')

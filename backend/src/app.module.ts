@@ -23,8 +23,8 @@ dotenv.config();
   imports: [
     MongooseModule.forRoot(process.env.DATABASE_URL),
     BooksModule,
-    LoggerModule,
     UserModule,
+    LoggerModule,
     AuthModule,
     EmailModule,
     VerifyEmailModule,

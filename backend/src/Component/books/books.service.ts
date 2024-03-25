@@ -103,8 +103,11 @@ export class BooksService {
   }
 
   async findOne(id: string): Promise<Book | null> {
-    // return await this.bookModel.findById({ _id: id }).exec();
-    return null;
+    return await this.bookModel.findById({ id: id }).exec();
+  }
+
+  async findById(id: string): Promise<Book | null> {
+    return await this.bookModel.findOne({ id: id }).exec();
   }
 
   async findBySlug(slug: string): Promise<Book | null> {
@@ -122,12 +125,15 @@ export class BooksService {
     return books;
   }
 
-  async update(id: string, updateBookDto: CreateBookDto): Promise<Book | null> {
+  async update(
+    id: string,
+    updateBookDto: CreateBookDto | Book,
+  ): Promise<Book | null> {
     const updatedBook = await this.bookModel
-      .findByIdAndUpdate(id, updateBookDto, { new: true })
+      .findOneAndUpdate({ id: id }, updateBookDto, { new: true })
       .exec();
     if (!updatedBook) {
-      return null; // Book with the specified ID not found
+      return null;
     }
     return updatedBook;
   }
@@ -138,5 +144,23 @@ export class BooksService {
       return null; // Book with the specified ID not found
     }
     return deletedBook;
+  }
+
+  async updateBookWithStripeData(
+    bookId: string,
+    productId: string,
+    priceId: string,
+  ): Promise<Book> {
+    const updatedBook = await this.bookModel.findOneAndUpdate(
+      { id: bookId },
+      {
+        $set: {
+          stripe: { stripeProductId: productId, stripePriceId: priceId },
+        },
+      },
+      { new: true },
+    );
+
+    return updatedBook;
   }
 }

@@ -17,7 +17,7 @@ import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
 import { ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
+
 @ApiTags('books')
 @Controller('books')
 export class BooksController {
@@ -45,6 +45,11 @@ export class BooksController {
     return this.booksService.findAll();
   }
 
+  @Get('getByRatings')
+  async findByRatings(): Promise<Book[]> {
+    return this.booksService.findByRatings();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Book | null> {
     return this.booksService.findOne(id);
@@ -53,11 +58,6 @@ export class BooksController {
   @Get('getBySlug/:slug')
   async findBySlugs(@Param('slug') slug: string): Promise<Book> {
     return this.booksService.findBySlug(slug);
-  }
-
-  @Get('getByRatings')
-  async findByRatings(): Promise<Book[]> {
-    return this.booksService.findByRatings();
   }
 
   @Put(':id')

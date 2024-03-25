@@ -22,9 +22,11 @@ export class CreateBookDto {
   readonly availability: string;
   readonly tags: string[];
   readonly references: string;
-  readonly weight: number;
+  readonly weight: string; // Updated to match the schema
   readonly editionDate: Date;
   readonly editionLanguage: string;
   readonly country: string;
   readonly dimensions: { [key in BookDimensions]: string };
+  readonly averageRating: number;
+  readonly ratings: { userId: string; rating: number }[];
 }

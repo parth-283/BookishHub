@@ -7,6 +7,8 @@ import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { EmailService } from '../email/email.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ImagesService } from '../images/images.service';
+import { Book } from '../books/schemas/book.schema';
+import { BooksService } from '../books/books.service';
 
 @Injectable()
 export class UserService {
@@ -15,6 +17,7 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly emailService: EmailService,
     private readonly imagesService: ImagesService,
+    private readonly bookService: BooksService,
   ) {}
 
   generateUUID(): string {
@@ -127,6 +130,30 @@ export class UserService {
 
   async findById(id: string): Promise<User | null> {
     return await this.userModel.findOne({ _id: id });
+  }
+
+  async addBookRating(
+    bookId: string,
+    userId: string,
+    rating: number,
+  ): Promise<Book> {
+    const book = await this.bookService.findById(bookId);
+    const userRatingIndex = book.ratings.findIndex((r) => r.userId === userId);
+
+    if (userRatingIndex !== -1) {
+      // Update existing rating
+      book.ratings[userRatingIndex].rating = rating;
+    } else {
+      // Add new rating
+      book.ratings.push({ userId, rating });
+    }
+
+    // Calculate average rating
+    const totalRating = book.ratings.reduce((acc, cur) => acc + cur.rating, 0);
+    const averageRating = totalRating / book.ratings.length;
+    book.averageRating = averageRating;
+
+    return this.bookService.update(bookId, book);
   }
 
   async update(id: string, updateUserDto: any): Promise<User | null> {

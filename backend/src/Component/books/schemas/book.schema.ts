@@ -46,7 +46,10 @@ export class Book extends Document {
   totalPages: number;
 
   @Prop({ required: true, default: 0 })
-  rating: number;
+  averageRating: number;
+
+  @Prop({ required: true, default: [] }) // Define the type and default value
+  ratings: { userId: string; rating: number }[]; // Array of objects with userId and rating
 
   @Prop({ required: true, default: '' })
   @IsEnum(BookFormats)
@@ -84,6 +87,9 @@ export class Book extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'categories' })
   categories: Types.ObjectId;
+
+  @Prop({ type: Object }) // Assuming stripe is an object
+  stripe: { stripeProductId: string; stripePriceId: string };
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
