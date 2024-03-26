@@ -30,7 +30,7 @@ export class BooksService {
   async create(
     createBookDto: CreateBookDto,
     bookImage: Express.Multer.File,
-    coverImage: Express.Multer.File,
+    coverImage?: Express.Multer.File,
   ): Promise<any> {
     try {
       const { userId, categoryId } = createBookDto;
@@ -121,6 +121,7 @@ export class BooksService {
       .find()
       .sort({ rating: -1 })
       .limit(8)
+      .populate('categories')
       .exec();
     return books;
   }

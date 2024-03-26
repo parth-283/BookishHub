@@ -142,7 +142,7 @@ export default function Book() {
           {/* Book cards */}
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {booksList.map((book) => (
+              {booksList?.map((book) => (
                 <BooksList key={book.id} book={book} />
               ))}
             </div>

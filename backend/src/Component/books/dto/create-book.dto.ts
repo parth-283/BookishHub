@@ -12,8 +12,8 @@ export class CreateBookDto {
   readonly genre: BookGenre;
   readonly description: string;
   readonly publicationDate: Date;
-  readonly image: object;
-  readonly backgroundImage: object;
+  readonly bookImage: object;
+  readonly coverImage: object;
   readonly isbn: string;
   readonly publisher: string;
   readonly totalPages: number;

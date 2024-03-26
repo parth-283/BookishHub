@@ -27,17 +27,17 @@ export class BooksController {
 
   // @UseGuards(JwtAuthGuard)
   @Post()
-  @UseInterceptors(FilesInterceptor('images', 2)) // Allow uploading two files
+  @UseInterceptors(FilesInterceptor('images')) // Allow uploading two files
   async addBook(
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles() images: any,
     @Body() createBookDto: CreateBookDto,
   ) {
     this.logger.log('Request for add book.');
     const bookImage = images.find((image) => image.fieldname === 'bookImage');
-    const coverImage = images.find((image) => image.fieldname === 'coverImage');
+    // const coverImage = images.find((image) => image.fieldname === 'coverImage');
 
     // Pass the images to the service to handle book creation
-    return this.booksService.create(createBookDto, bookImage, coverImage);
+    return this.booksService.create(createBookDto, bookImage);
   }
 
   @Get()

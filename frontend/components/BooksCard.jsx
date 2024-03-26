@@ -3,6 +3,7 @@ import { booksService } from "@/services/books.service";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 const posts = [
   {
@@ -132,14 +133,18 @@ export default function BooksCard() {
                 </div>
                 <div className="flex items-center gap-x-4 text-xs">
                   <time dateTime={post?.createdAt} className="text-gray-500">
-                    {post?.createdAt}
+                    {dayjs(post?.createdAt, "MM-DD-YYYY").format(
+                      "MMM DD, YYYY"
+                    )}
                   </time>
-                  <Link
-                    href="javascript:void()"
-                    className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
-                  >
-                    {post?.category?.title}
-                  </Link>
+                  {post?.category && (
+                    <Link
+                      href={post.category.href}
+                      className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+                    >
+                      {post.category.title}
+                    </Link>
+                  )}
                 </div>
                 <div className="group relative">
                   <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
@@ -164,10 +169,11 @@ export default function BooksCard() {
                     <p className="font-semibold text-gray-900">
                       <a href="javascript:void()">
                         <span className="absolute inset-0" />
-                        {post?.author}
+                        {post?.author?.name} {/* Access the name property */}
                       </a>
                     </p>
-                    <p className="text-gray-600">{post?.author.role}</p>
+                    <p className="text-gray-600">{post?.author?.role}</p>{" "}
+                    {/* Render the role property */}
                   </div>
                 </div>
               </article>
