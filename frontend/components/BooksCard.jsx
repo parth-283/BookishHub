@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { booksService } from "@/services/books.service";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const posts = [
   {
@@ -115,9 +116,9 @@ export default function BooksCard() {
             </p>
           </div>
           <div className="mx-auto mt-5 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-t-8 border-gray-200 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-            {posts.map((post) => (
+            {booksBanner.map((post) => (
               <article
-                key={post.id}
+                key={post?.id}
                 className="bg-white rounded flex max-w-lg flex-col p-4 items-start justify-between shadow hover:shadow-lg"
               >
                 <div className="rounded">
@@ -130,43 +131,43 @@ export default function BooksCard() {
                   />
                 </div>
                 <div className="flex items-center gap-x-4 text-xs">
-                  <time dateTime={post.datetime} className="text-gray-500">
-                    {post.date}
+                  <time dateTime={post?.createdAt} className="text-gray-500">
+                    {post?.createdAt}
                   </time>
-                  <a
-                    href={post.category.href}
+                  <Link
+                    href="javascript:void()"
                     className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
                   >
-                    {post.category.title}
-                  </a>
+                    {post?.category?.title}
+                  </Link>
                 </div>
                 <div className="group relative">
                   <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                    <a href={post.href}>
+                    <Link href="javascript:void()">
                       <span className="absolute inset-0" />
-                      {post.title}
-                    </a>
+                      {post?.title}
+                    </Link>
                   </h3>
                   <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                    {post.description}
+                    {post?.description}
                   </p>
                 </div>
                 <div className="relative mt-8 flex items-center gap-x-4">
                   <Image
-                    src={post.author.imageUrl}
-                    alt={post.author.name}
+                    src={post?.author.imageUrl}
+                    alt={post?.author.name}
                     className="h-10 w-10 rounded-full bg-gray-50"
                     width={100}
                     height={100}
                   />
                   <div className="text-sm leading-6">
                     <p className="font-semibold text-gray-900">
-                      <a href={post.author.href}>
+                      <a href="javascript:void()">
                         <span className="absolute inset-0" />
-                        {post.author.name}
+                        {post?.author}
                       </a>
                     </p>
-                    <p className="text-gray-600">{post.author.role}</p>
+                    <p className="text-gray-600">{post?.author.role}</p>
                   </div>
                 </div>
               </article>
