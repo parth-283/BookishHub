@@ -82,6 +82,7 @@ const options = {
             role: data.role,
             refreshToken: data.refreshToken,
             email: data.email,
+            slug: data.slug,
             expiresIn: data.expiresIn,
             name: data.name,
             callbackUrl: data.callbackUrl,
@@ -121,6 +122,7 @@ const options = {
           accessTokenExpires: Date.now() + ((user.expiresIn - 60) * 1000),
           name: user.name,
           email: user.email,
+          slug: user.slug,
           profilePictureUrl: user.profilePictureUrl,
           isNewUser: user.isNewUser,
           redirect: user.redirect,
@@ -149,6 +151,8 @@ const options = {
       session.user.redirect = token?.redirectUrl;
       session.user.role = token?.role;
       session.user.email = token?.email;
+      session.user.name = token?.name;
+      session.user.slug = token?.slug;
       return session;
     },
   },

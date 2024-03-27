@@ -55,6 +55,7 @@ export class AuthService {
       expiresIn,
       role: user.role,
       email: user.email,
+      slug: user.slug,
       name: user.firstName + ' ' + user.lastName,
       callbackUrl,
       refreshToken: csrfToken,
