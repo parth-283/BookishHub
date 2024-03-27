@@ -10,7 +10,7 @@ export default function HeroSection() {
       }}
     >
       <div className="h-screen relative isolate px-6 lg:px-8">
-        <div className="h-screen mx-auto max-w-2xl py-32 flex justify-center items-center">
+        <div className="h-screen mx-auto max-w-2xl pb-32 flex justify-center items-center">
           <div className="text-center">
             <div className="hidden sm:flex sm:justify-center">
               <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
@@ -30,7 +30,7 @@ export default function HeroSection() {
               Dive into captivating stories spanning genres from fantasy to
               romance, from thriller to historical fiction.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            {/* <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                 href="#"
                 className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -43,7 +43,7 @@ export default function HeroSection() {
               >
                 Learn more <span aria-hidden="true">→</span>
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

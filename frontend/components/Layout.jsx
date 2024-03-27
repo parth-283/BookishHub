@@ -16,11 +16,11 @@ const Layout = ({ children }) => {
   ];
   return (
     <>
-      {!ishideHeader.includes(router.asPath) && (
-        <header>
-          <Header />
-        </header>
-      )}
+      {/* {!ishideHeader.includes(router.asPath) && (
+      )} */}
+      <header>
+        <Header />
+      </header>
       <div>
         <main>
           {" "}
@@ -28,9 +28,9 @@ const Layout = ({ children }) => {
         </main>
       </div>
       {!ishideHeader.includes(router.asPath) && (
-        <footer>
+        <div>
           <Footer />
-        </footer>
+        </div>
       )}
     </>
   );

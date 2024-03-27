@@ -16,7 +16,8 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
 import { ApiTags } from '@nestjs/swagger';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/utils/multer.config';
 
 @ApiTags('books')
 @Controller('books')
@@ -27,17 +28,15 @@ export class BooksController {
 
   // @UseGuards(JwtAuthGuard)
   @Post()
-  @UseInterceptors(FilesInterceptor('images')) // Allow uploading two files
+  @UseInterceptors(FileInterceptor('file', multerOptions))
   async addBook(
-    @UploadedFiles() images: any,
+    @UploadedFile() file: Express.Multer.File,
     @Body() createBookDto: CreateBookDto,
   ) {
     this.logger.log('Request for add book.');
-    const bookImage = images.find((image) => image.fieldname === 'bookImage');
-    // const coverImage = images.find((image) => image.fieldname === 'coverImage');
 
     // Pass the images to the service to handle book creation
-    return this.booksService.create(createBookDto, bookImage);
+    return this.booksService.create(createBookDto, file);
   }
 
   @Get()

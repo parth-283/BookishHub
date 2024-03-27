@@ -20,9 +20,12 @@ export class Book extends Document {
   @Prop({ required: true, default: '' })
   author: string;
 
-  @Prop({ required: true, default: '' })
+  @Prop({ required: true })
   @IsEnum(BookGenre)
   genre: BookGenre;
+
+  @Prop({ required: true })
+  genre_slug: string;
 
   @Prop({ required: true, default: '' })
   description: string;
@@ -33,14 +36,14 @@ export class Book extends Document {
   @Prop()
   image: ImageResponseDto;
 
-  @Prop()
-  backgroundImage: ImageResponseDto;
-
   @Prop({ required: true, default: '' })
   isbn: string;
 
   @Prop({ required: true, default: '' })
   publisher: string;
+
+  @Prop({ required: true, default: '' })
+  publisherImage: string;
 
   @Prop({ required: true, default: 0 })
   totalPages: number;

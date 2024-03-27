@@ -65,7 +65,8 @@ const books = [
 export default function Book() {
   const router = useRouter();
   const { slug } = router.query;
-  const [booksList, setbooksList] = useState([]);
+  const [booksList, setBooksList] = useState([]);
+  const [categoryDetail, setCategoryDetail] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(true);
 
   useEffect(() => {
@@ -83,7 +84,8 @@ export default function Book() {
     categoryService
       .getCategoryBySlug(slug[0])
       .then((res) => {
-        setbooksList(res);
+        setBooksList(res.books);
+        setCategoryDetail(res);
         setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
@@ -95,7 +97,7 @@ export default function Book() {
     booksService
       .getBooks()
       .then((res) => {
-        setbooksList(res);
+        setBooksList(res);
         setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
@@ -120,18 +122,17 @@ export default function Book() {
         <div className="container mx-auto px-10 relative z-10">
           <div className="relative bg-white rounded-lg shadow-md overflow-hidden transition duration-300 transform scale-105 shadow-lg">
             <img
-              src="/Images/category-2.jpg"
+              src={categoryDetail?.image ? categoryDetail.image : "/Images/category-2.jpg"}
               alt="Category Name"
               className="w-full h-64 object-cover opacity-80"
             />
             <div className="absolute z-10 inset-0 flex text-center items-center justify-center">
-              <div>
+              <div className="bg-gray-800 bg-opacity-10 p-4 rounded-lg">
                 <h1 className="text-4xl font-bold text-white mb-4">
-                  Enter the World of Books
+                  {categoryDetail?.name ? categoryDetail.name : "Enter the World of Books"}
                 </h1>
                 <p className="text-lg text-gray-300 mb-8">
-                  Dive into our library of stories, where every page holds a new
-                  adventure waiting to unfold.
+                  {categoryDetail?.description ? categoryDetail.description : "Dive into our library of stories, where every page holds a new adventure waiting to unfold."}
                 </p>
               </div>
             </div>
@@ -142,10 +143,24 @@ export default function Book() {
           {/* Book cards */}
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {booksList?.map((book) => (
+              {booksList?.length > 0 && (booksList?.map((book) => (
                 <BooksList key={book.id} book={book} />
-              ))}
+              )))}
             </div>
+            {(
+              <>
+                {!isDataLoaded && booksList?.length == 0 && (
+                  <div className="w-full flex justify-center">
+                    <div className="bg-gray-100 rounded-lg shadow-lg p-8 transform hover:scale-105 transition duration-300">
+                      <h2 className="text-3xl font-bold text-gray-800">Book not found</h2>
+                      <p className="mt-4 text-lg text-gray-600">
+                        We couldn't find the book you're looking for. Please try again later.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

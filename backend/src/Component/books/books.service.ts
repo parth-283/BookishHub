@@ -30,7 +30,6 @@ export class BooksService {
   async create(
     createBookDto: CreateBookDto,
     bookImage: Express.Multer.File,
-    coverImage?: Express.Multer.File,
   ): Promise<any> {
     try {
       const { userId, categoryId } = createBookDto;
@@ -40,9 +39,11 @@ export class BooksService {
       this.logger.log('Upload book picture.');
       const bookImageResult = await this.imagesService.uploadImage(bookImage);
 
-      this.logger.log('Upload background picture.');
-      const backgroundImageResult =
-        await this.imagesService.uploadImage(coverImage);
+      const userResult = await this.userModel.findOne({ id: userId });
+
+      const categoryResult = await this.categoryModel.findOne({
+        id: categoryId,
+      });
 
       // Create a new book
       const createdbook = new this.bookModel({
@@ -50,18 +51,18 @@ export class BooksService {
         id: this.generateUUID(),
         slug: slug,
         image: bookImageResult,
-        backgroundImage: backgroundImageResult,
+        genre_slug: categoryResult.slug,
+        publicationDate: new Date(),
+        publisherImage: userResult?.profileImage.secure_url || '',
+        publisher: userResult?.firstName + ' ' + userResult?.lastName || '',
       });
 
       const createdBook = new this.bookModel(createdbook);
 
-      await createdBook.save();
       this.logger.log('Book added successfully.');
 
       // Add book ID to user's list of books
       this.logger.log('Add book on user by id:', userId);
-
-      const userResult = await this.userModel.findOne({ id: userId });
 
       await this.userModel.findByIdAndUpdate(
         { _id: userResult._id },
@@ -72,9 +73,6 @@ export class BooksService {
 
       // Add book ID to category's list of books
       this.logger.log('Add book on category by id:', categoryId);
-      const categoryResult = await this.categoryModel.findOne({
-        id: categoryId,
-      });
 
       await this.categoryModel.findByIdAndUpdate(
         { _id: categoryResult._id },
@@ -82,6 +80,8 @@ export class BooksService {
           $push: { books: createdBook._id },
         },
       );
+
+      await createdBook.save();
 
       return {
         message: 'Book added successfully',

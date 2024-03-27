@@ -123,9 +123,12 @@ export default function BooksCard() {
               >
                 <div className="rounded">
                   <Image
-                    src="https://source.unsplash.com/400x400/?books"
+                    src={
+                      post?.image?.secure_url ||
+                      "https://source.unsplash.com/400x400/?books"
+                    }
                     alt="book card"
-                    className="rounded bg-gray-50"
+                    className="rounded bg-gray-50 h-64	"
                     width={400}
                     height={200}
                   />
@@ -136,18 +139,18 @@ export default function BooksCard() {
                       "MMM DD, YYYY"
                     )}
                   </time>
-                  {post?.category && (
+                  {post?.genre && (
                     <Link
-                      href={post.category.href}
-                      className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+                      href={`/book/${post.genre_slug}`}
+                      className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-current hover:bg-gray-100"
                     >
-                      {post.category.title}
+                      {post.genre}
                     </Link>
                   )}
                 </div>
                 <div className="group relative">
                   <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                    <Link href="javascript:void()">
+                    <Link href={`/book-detail/${post.slug}`}>
                       <span className="absolute inset-0" />
                       {post?.title}
                     </Link>
@@ -158,8 +161,8 @@ export default function BooksCard() {
                 </div>
                 <div className="relative mt-8 flex items-center gap-x-4">
                   <Image
-                    src={post?.author.imageUrl}
-                    alt={post?.author.name}
+                    src={post?.publisherImage}
+                    alt={post?.publisher}
                     className="h-10 w-10 rounded-full bg-gray-50"
                     width={100}
                     height={100}
@@ -168,11 +171,10 @@ export default function BooksCard() {
                     <p className="font-semibold text-gray-900">
                       <a href="javascript:void()">
                         <span className="absolute inset-0" />
-                        {post?.author?.name} {/* Access the name property */}
+                        {post?.publisher}
                       </a>
                     </p>
-                    <p className="text-gray-600">{post?.author?.role}</p>{" "}
-                    {/* Render the role property */}
+                    <p className="text-gray-600">{post?.editionLanguage}</p>{" "}
                   </div>
                 </div>
               </article>

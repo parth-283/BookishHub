@@ -8,5 +8,5 @@ function AddBooks() {
     </div>
   );
 }
-
+AddBooks.auth = true
 export default AddBooks;

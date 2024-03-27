@@ -10,12 +10,13 @@ export class CreateBookDto {
   readonly title: string;
   readonly author: string;
   readonly genre: BookGenre;
+  readonly genre_slug: string;
   readonly description: string;
   readonly publicationDate: Date;
-  readonly bookImage: object;
-  readonly coverImage: object;
+  readonly image: object;
   readonly isbn: string;
   readonly publisher: string;
+  readonly publisherImage: string;
   readonly totalPages: number;
   readonly format: BookFormats;
   readonly price: number;

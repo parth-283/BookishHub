@@ -18,9 +18,7 @@ export default class MyApp extends App {
       pageProps: { session, ...pageProps },
     } = this.props;
 
-    const stripePromise = loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-    );
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
     Router.events.on("routeChangeStart", () => NProgress.start());
     Router.events.on("routeChangeComplete", () => NProgress.done());

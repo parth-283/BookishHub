@@ -12,6 +12,7 @@ const nextConfig = {
       "tailwindui.com",
       "source.unsplash.com",
       "images.unsplash.com",
+      "res.cloudinary.com"
     ],
   },
   reactStrictMode: true,
@@ -30,6 +31,8 @@ const nextConfig = {
       process.env.NODE_ENV === "development"
         ? process.env.NEXT_API_BASE_URL
         : process.env.NEXT_API_BASE_URL,
+    stripePublicKey: process.env.STRIPE_PUBLIC_KEY,
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY,
   },
 };
 

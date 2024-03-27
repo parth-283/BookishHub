@@ -4,17 +4,18 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 let navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Category", href: "/category", current: false },
-  { name: "Books", href: "/book", current: false },
-  { name: "Contact", href: "/contact", current: false },
+  { name: "Home", href: "/", current: true, isAuth: "both" },
+  { name: "Category", href: "/category", current: false, isAuth: "both" },
+  { name: "Books", href: "/book", current: false, isAuth: "both" },
+  { name: "Contact", href: "/contact", current: false, isAuth: "false" },
+  { name: "Add Book", href: "/add-book", current: false, isAuth: "true" },
 ];
 
 export default function Header() {
@@ -53,19 +54,48 @@ export default function Header() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.href.split("/")[1] == router.route.split("/")[1]
-                            ? "bg-gray-900 text-white"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium"
+                      <>
+                        {session.status == "authenticated" ? (
+                          <>
+                            {(item.isAuth == "true" ||
+                              item.isAuth == "both") && (
+                              <Link
+                                key={item.name}
+                                href={item.href}
+                                className={classNames(
+                                  item.href.split("/")[1] ==
+                                    router.route.split("/")[1]
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                  "rounded-md px-3 py-2 text-sm font-medium"
+                                )}
+                                aria-current={item.current ? "page" : item.name}
+                              >
+                                {item.name}
+                              </Link>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {item.isAuth !== "true" && (
+                              <Link
+                                key={item.name}
+                                href={item.href}
+                                className={classNames(
+                                  item.href.split("/")[1] ==
+                                    router.route.split("/")[1]
+                                    ? "bg-gray-900 text-white"
+                                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                  "rounded-md px-3 py-2 text-sm font-medium"
+                                )}
+                                aria-current={item.current ? "page" : item.name}
+                              >
+                                {item.name}
+                              </Link>
+                            )}
+                          </>
                         )}
-                        aria-current={item.current ? "page" : item.name}
-                      >
-                        {item.name}
-                      </Link>
+                      </>
                     ))}
                   </div>
                 </div>
@@ -134,7 +164,8 @@ export default function Header() {
                           <Menu.Item>
                             {({ active }) => (
                               <Link
-                                href="#"
+                                href="javascript:void()"
+                                onClick={() => signOut()}
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
