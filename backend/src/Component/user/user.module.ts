@@ -1,3 +1,5 @@
+// user.module.ts
+
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
@@ -13,7 +15,10 @@ import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [
-    JwtModule.register({}),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET, // Provide your JWT secret key here
+      signOptions: { expiresIn: '1h' }, // Example sign options
+    }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     BooksModule,
     CategoryModule,

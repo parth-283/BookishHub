@@ -82,7 +82,7 @@ export default function BooksCard() {
 
   if (session && status) {
     const { user, accessToken, role } = session;
-    debugger;
+
     // Access user data, access token, and role
   } else {
     // User is not authenticated
@@ -96,7 +96,6 @@ export default function BooksCard() {
     await booksService
       .getByRatings()
       .then((res) => {
-        debugger;
         setBooksBanner(res);
       })
       .catch((errorMessage) => {

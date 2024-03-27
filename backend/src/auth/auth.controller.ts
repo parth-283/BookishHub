@@ -1,6 +1,14 @@
 // auth.controller.ts
 
-import { Controller, Post, Body, UseGuards, Req, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-dto/login-dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,8 +24,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    const { email, password } = loginDto;
-    return this.authService.login(email, password);
+    return this.authService.login(loginDto);
   }
 
   @Post('change-password')
@@ -37,6 +44,9 @@ export class AuthController {
 
   @Post('refresh-token')
   async refreshToken(@Body('refreshToken') refreshToken: string): Promise<any> {
+    if (!refreshToken) {
+      throw new BadRequestException('Refresh token is missing');
+    }
     return this.authService.refreshToken(refreshToken);
   }
 

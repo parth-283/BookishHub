@@ -13,6 +13,7 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
+      debugger
       const { token } = router.query;
 
       if (!token) {

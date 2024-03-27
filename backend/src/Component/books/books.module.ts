@@ -9,6 +9,7 @@ import { BooksController } from './books.controller';
 import { BooksService } from './books.service';
 import { UserService } from '../user/user.service';
 import { CategoryService } from '../category/category.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { CategoryService } from '../category/category.service';
     ImagesModule,
   ],
   controllers: [BooksController],
-  providers: [BooksService, UserService, CategoryService],
+  providers: [BooksService, JwtService, UserService, CategoryService],
 
   exports: [BooksService, MongooseModule],
 })

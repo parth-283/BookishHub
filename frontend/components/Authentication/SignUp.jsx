@@ -44,6 +44,10 @@ export default function SignUp() {
       });
   };
 
+  const handleClose = () => {
+    setShowAlert(false);
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">

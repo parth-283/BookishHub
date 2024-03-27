@@ -1,4 +1,4 @@
-import { IsString, IsEmail } from 'class-validator';
+import { IsString, IsEmail, IsBoolean } from 'class-validator';
 
 export class LoginDto {
   @IsEmail()
@@ -6,4 +6,13 @@ export class LoginDto {
 
   @IsString()
   password: string;
+
+  @IsString()
+  callbackUrl: string;
+
+  @IsString()
+  csrfToken: string;
+
+  @IsBoolean()
+  redirect: boolean;
 }

@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ImagesService } from '../images/images.service';
 import { Book } from '../books/schemas/book.schema';
 import { BooksService } from '../books/books.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
     private readonly emailService: EmailService,
     private readonly imagesService: ImagesService,
     private readonly bookService: BooksService,
+    private readonly jwtService: JwtService,
   ) {}
 
   generateUUID(): string {
@@ -42,11 +44,18 @@ export class UserService {
         role: 'user',
       });
 
+      this.logger.log('Genrate verify-email token');
+      // Generate verification token
+      const verificationToken = this.jwtService.sign(
+        { email: createUserDto.email },
+        { secret: process.env.JWT_SECRET},
+      );
+
       this.logger.log('Create new user with id:', createdUser.id);
       // Send welcome email with verification URL
       await this.emailService.sendWelcomeEmail(
         createUserDto.email,
-        process.env.JWT_SECRET,
+        verificationToken,
       );
 
       return await createdUser.save();
@@ -158,7 +167,7 @@ export class UserService {
 
   async update(id: string, updateUserDto: any): Promise<User | null> {
     return this.userModel
-      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .findOneAndUpdate({ id }, updateUserDto, { new: true })
       .exec();
   }
 

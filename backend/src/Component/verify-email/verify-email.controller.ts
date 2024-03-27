@@ -10,15 +10,8 @@ export class VerificationController {
   constructor(private readonly verificationService: VerificationService) {}
 
   @Post()
-  async verifyEmail(@Query('token') token: string): Promise<string> {
+  async verifyEmail(@Query('token') token: string): Promise<boolean | string> {
     // Call verification service to verify email
-    const result = await this.verificationService.verifyEmail(token);
-
-    // Return response based on verification result
-    if (result) {
-      return 'Email verified successfully';
-    } else {
-      return 'Invalid verification token';
-    }
+    return await this.verificationService.verifyEmail(token);
   }
 }

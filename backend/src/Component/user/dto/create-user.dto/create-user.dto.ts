@@ -9,6 +9,7 @@ export class CreateUserDto {
   bod: Date;
   address: string;
   email: string;
+  isValid: boolean;
   phone: string;
   about: string;
   profileImage: string;
