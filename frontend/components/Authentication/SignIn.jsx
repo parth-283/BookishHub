@@ -30,7 +30,7 @@ export default function SignIn() {
 
   const onSubmit = async (data) => {
     console.log(data, errors);
-    debugger;
+    ;
     const email = data.email;
     const password = data.password;
 
@@ -40,7 +40,7 @@ export default function SignIn() {
       redirect: false, // prevent automatic redirection
     })
       .then((res) => {
-        debugger;
+        ;
         localStorage.setItem("user", JSON.stringify(res));
         // Handle result, redirect if successful, show error otherwise
         if (res?.error) {

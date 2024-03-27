@@ -32,7 +32,7 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    debugger;
+    ;
     await accountService
       .register(data)
       .then((res) => {

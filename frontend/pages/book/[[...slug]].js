@@ -79,7 +79,7 @@ export default function Book() {
   }, []);
 
   const getCategoryBySlug = () => {
-    debugger;
+    ;
     categoryService
       .getCategoryBySlug(slug[0])
       .then((res) => {
