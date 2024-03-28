@@ -79,6 +79,7 @@ const posts = [
 export default function BooksCard() {
   const [booksBanner, setBooksBanner] = useState([]);
   const { data: session, status } = useSession();
+  const [isDataLoaded, setIsDataLoaded] = useState(true);
 
   if (session && status) {
     const { user, accessToken, role } = session;
@@ -97,6 +98,7 @@ export default function BooksCard() {
       .getByRatings()
       .then((res) => {
         setBooksBanner(res);
+        setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
         console.log(errorMessage);
@@ -180,6 +182,28 @@ export default function BooksCard() {
               </article>
             ))}
           </div>
+          <>
+            {isDataLoaded && (
+              <div className="my-16 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900"></div>
+                <span className="ml-4">Loading...</span>
+              </div>
+            )}
+
+            {!isDataLoaded && booksBanner?.length == 0 && (
+              <div className="w-full flex justify-center">
+                <div className="bg-gray-100 rounded-lg shadow-lg p-8 transform hover:scale-105 transition duration-300">
+                  <h2 className="text-3xl font-bold text-gray-800">
+                    Book not found
+                  </h2>
+                  <p className="mt-4 text-lg text-gray-600">
+                    We couldn't find the book you're looking for. Please try
+                    again later.
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         </div>
       </div>
     </section>
