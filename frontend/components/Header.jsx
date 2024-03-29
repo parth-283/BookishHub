@@ -16,7 +16,6 @@ let navigation = [
   { name: "Books", href: "/book", current: false, isAuth: "both" },
   { name: "About Us", href: "/about", current: false, isAuth: "both" },
   { name: "Contact Us", href: "/contact", current: false, isAuth: "false" },
-  { name: "Add Book", href: "/add-book", current: false, isAuth: "true" },
 ];
 
 export default function Header() {
@@ -171,15 +170,15 @@ export default function Header() {
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a
-                                href="#"
+                              <Link
+                                href="/settings"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
                               >
                                 Settings
-                              </a>
+                              </Link>
                             )}
                           </Menu.Item>
                           <Menu.Item>

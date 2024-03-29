@@ -18,20 +18,22 @@ const Layout = ({ children }) => {
     <>
       {/* {!ishideHeader.includes(router.asPath) && (
       )} */}
-      <header>
-        <Header />
-      </header>
-      <div>
-        <main>
-          {" "}
-          <CustomProvider>{children}</CustomProvider>
-        </main>
-      </div>
-      {!ishideHeader.includes(router.asPath) && (
-        <div>
-          <Footer />
+      <div className="min-h-screen flex flex-col justify-between">
+        <header>
+          <Header />
+        </header>
+        <div className="min-h-[35rem]">
+          <main>
+            {" "}
+            <CustomProvider>{children}</CustomProvider>
+          </main>
         </div>
-      )}
+        {!ishideHeader.includes(router.asPath) && (
+          <footer>
+            <Footer />
+          </footer>
+        )}
+      </div>
     </>
   );
 };
