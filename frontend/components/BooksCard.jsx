@@ -197,8 +197,8 @@ export default function BooksCard() {
                     Book not found
                   </h2>
                   <p className="mt-4 text-lg text-gray-600">
-                    We couldn't find the book you're looking for. Please try
-                    again later.
+                    {`We couldn't find the book you're looking for. Please try
+                    again later.`}
                   </p>
                 </div>
               </div>

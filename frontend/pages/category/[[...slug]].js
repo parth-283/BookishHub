@@ -195,7 +195,7 @@ export default function Book({ book }) {
                 <div className="bg-gray-100 rounded-lg shadow-lg p-8 transform hover:scale-105 transition duration-300">
                   <h2 className="text-3xl font-bold text-gray-800">Book not found</h2>
                   <p className="mt-4 text-lg text-gray-600">
-                    We couldn't find the book you're looking for. Please try again later.
+                    {`We couldn't find the book you're looking for. Please try again later.`}
                   </p>
                 </div>
               </div>
