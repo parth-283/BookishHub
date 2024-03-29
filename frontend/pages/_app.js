@@ -10,6 +10,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PageLoader from "@/components/PageLoader";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class MyApp extends App {
   render() {

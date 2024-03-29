@@ -1,8 +1,9 @@
 import { categoryService } from "@/services/category.service";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const AddBookForm = () => {
+const AddBookForm = (props) => {
   const { register, handleSubmit, errors } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,8 +17,8 @@ const AddBookForm = () => {
     }
   }, []);
 
-  const getCategoryList = () => {
-    categoryService.categoryList().then((res) => {
+  const getCategoryList = async () => {
+    await categoryService.categoryList().then((res) => {
       setCategoryList(res);
       setIsDataLoaded(true);
     });
@@ -50,7 +51,17 @@ const AddBookForm = () => {
   return (
     <>
       <div className="container mx-auto p-8">
-        <h1 className="text-3xl font-semibold mb-6">Add New Book</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-semibold mb-6">Add New Book</h1>
+          <button
+            onClick={() => props.setShowAddBookModal(false)}
+            className=" m-4 text-gray-500 hover:text-gray-700 bg-white rounded-full p-2"
+          >
+            {/* Close icon */}
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+        </div>
+
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-2 gap-6 max-w-3xl mx-auto"

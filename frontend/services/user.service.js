@@ -8,6 +8,7 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}`;
 export const userService = {
   GetUserProfile,
   UpdateUserProfile,
+  UpdateProfile,
 };
 
 function GetUserProfile(slug) {
@@ -25,17 +26,17 @@ function GetUserHeaderInfo() {
 function UpdateUserProfile(id, file, coverImage) {
   const body = new FormData();
   body.append("file", file);
-  // body.append("profilePictureUrl", data.fileUrl);
-  // body.append("email", data.email);
-  // body.append("firstName", data.firstName);
-  // body.append("lastName", data.lastName);
-  // body.append("aboutMe", data.aboutMe);
-  // body.append("city", data.city);
-  // body.append("address", data.address);
-  // body.append("certificateLanguage", data.certificateLanguage);
 
   return fetchWrapper
     .postWithFormData(`${baseUrl}/users/image/${coverImage}/${id}`, body)
+    .then((user) => {
+      return user;
+    });
+}
+
+function UpdateProfile(id, data) {
+  return fetchWrapper
+    .put(`${baseUrl}/users/${id}`, data)
     .then((user) => {
       return user;
     });

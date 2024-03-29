@@ -23,6 +23,26 @@ export default function Header() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
 
+  useEffect(() => {
+    getSessionData();
+    // getFavorites();
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn(); // Force sign in to hopefully resolve error
+    }
+  }, [session, router]);
+
+  async function getSessionData() {
+    await fetch("/api/auth/session")
+      .then((res) => res.json())
+      .then((result) => {
+        if (result && result.user) {
+          localStorage.setItem("user", JSON.stringify(result?.user));
+        } else {
+          localStorage.removeItem("user");
+        }
+      });
+  }
+
   return (
     <Disclosure as="nav" className="bg-gray-700">
       {({ open }) => (

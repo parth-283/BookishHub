@@ -35,7 +35,7 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file', multerOptions))
   async uploadImage(
     @Param('id') id: string,
-    @Param('coverImage') coverImage: boolean,
+    @Param('coverImage') coverImage: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
@@ -43,7 +43,11 @@ export class UserController {
         throw new Error('No file uploaded');
       }
 
-      const result = await this.userService.uploadImage(id, file, coverImage);
+      const result = await this.userService.uploadImage(
+        id,
+        file,
+        coverImage == 'true',
+      );
       return { success: true, data: result };
     } catch (error) {
       return { success: false, error: error.message };
