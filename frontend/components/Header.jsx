@@ -14,7 +14,8 @@ let navigation = [
   { name: "Home", href: "/", current: true, isAuth: "both" },
   { name: "Category", href: "/category", current: false, isAuth: "both" },
   { name: "Books", href: "/book", current: false, isAuth: "both" },
-  { name: "Contact", href: "/contact", current: false, isAuth: "false" },
+  { name: "About Us", href: "/about", current: false, isAuth: "both" },
+  { name: "Contact Us", href: "/contact", current: false, isAuth: "false" },
   { name: "Add Book", href: "/add-book", current: false, isAuth: "true" },
 ];
 
