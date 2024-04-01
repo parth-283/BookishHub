@@ -7,6 +7,22 @@ import UserProfileEditPage from "@/components/UserProfileEditPage";
 import { HeartIcon, StarIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import AddBookForm from "@/components/AddBookForm";
 
+// Define validation schema using Yup
+export const userProfileValidationSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State is required"),
+  country: Yup.string().required("Country is required"),
+  dob: Yup.string().required("Date of birth is required"),
+  address: Yup.string().required("Address is required"),
+  phone: Yup.string().required("Phone number is required"),
+  about: Yup.string().required("About is required"),
+});
+
 const users = [
   {
     id: 1,
@@ -63,26 +79,48 @@ const books = [
 const UserProfilePage = () => {
   const router = useRouter();
   const { slug } = router.query;
-  const [userProfile, setuserProfile] = useState();
+  const [userProfile, setUserProfile] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const fileInputRef = useRef(null);
   const [showAddBookModal, setShowAddBookModal] = useState(false);
 
-  const formik = useFormik({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormik({
     initialValues: {
-      image: null,
+      firstName: userProfile?.firstName || "",
+      lastName: userProfile?.lastName || "",
+      email: userProfile?.email || "",
+      city: userProfile?.city || "",
+      state: userProfile?.state || "",
+      country: userProfile?.country || "",
+      dob: userProfile?.dob || "",
+      address: userProfile?.address || "",
+      phone: userProfile?.phone || "",
+      about: userProfile?.about || "",
     },
-    validationSchema: Yup.object().shape({
-      image: Yup.mixed().required("Please upload an image"),
-    }),
+    validationSchema: userProfileValidationSchema,
     onSubmit: async (values) => {
-      handleSubmit(values);
+      try {
+        await userService.updateUserProfile(slug, values);
+        getUserProfileData();
+        setIsEdit(false);
+      } catch (error) {
+        console.error("Error updating user profile:", error);
+      }
     },
   });
 
   useEffect(() => {
     getUserPrifleData();
   }, [slug]);
+
+  const handleCancelEdit = () => {
+    setIsEdit(false);
+    // Reset the form values
+  };
 
   const getUserPrifleData = async () => {
     await userService
@@ -99,7 +137,7 @@ const UserProfilePage = () => {
       image,
       coverImage
     );
-    getUserPrifleData()
+    getUserPrifleData();
     console.log(profileImage, "profileImage");
   };
 

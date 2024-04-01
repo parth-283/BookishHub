@@ -1,32 +1,31 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-
 async function refreshAccessToken(token) {
   try {
     // Construct the URL for the refresh token endpoint
-    const url = process.env.NEXT_API_BASE_URL + '/auth/refresh-token';
+    const url = process.env.NEXT_API_BASE_URL + "/auth/refresh-token";
 
     // Prepare the payload with the refresh token
     const payload = {
-      refreshToken: token.refreshToken
+      refreshToken: token.refreshToken,
     };
 
     // Send a POST request to the refresh token endpoint
     const res = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(payload),
       headers: {
-        'Content-Type': 'application/json',
-        'Accept-Language': 'en-US',
-        'Referer': process.env.REFERER
+        "Content-Type": "application/json",
+        "Accept-Language": "en-US",
+        Referer: process.env.REFERER,
       },
     });
 
     // Check if the request was successful
     if (!res.ok) {
       // Throw an error if the request failed
-      throw new Error('Failed to refresh access token');
+      throw new Error("Failed to refresh access token");
     }
 
     // Parse the response body as JSON
@@ -37,18 +36,17 @@ async function refreshAccessToken(token) {
     return {
       accessToken: refreshedTokens.accessToken,
       accessTokenExpires: refreshedTokens.accessTokenExpires,
-      refreshToken: refreshedTokens.refreshToken
+      refreshToken: refreshedTokens.refreshToken,
     };
   } catch (error) {
     // If an error occurs during the refresh process, log the error and return the original token
-    console.error('Error refreshing access token:', error);
+    console.error("Error refreshing access token:", error);
     return {
       ...token,
       error: "RefreshAccessTokenError",
     };
   }
 }
-
 
 // Define your NextAuth options
 const options = {
@@ -97,53 +95,44 @@ const options = {
   ],
   secret: process.env.secret,
   pages: {
-    signIn: '/signin',
-    newUser: '/signup',
-    error: "/"
+    signIn: "/signin",
+    newUser: "/signup",
+    error: "/",
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     jwt: true,
-    maxAge: 7200
+    maxAge: 4 * 60 * 60,
   },
   callbacks: {
-    async jwt({
-      token,
-      user,
-      account,
-      profile
-    }) {
-
+    async jwt({ token, user, account, profile }) {
       if (account && user) {
         return {
           ...token,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
-          accessTokenExpires: Date.now() + ((user.expiresIn - 60) * 1000),
+          accessTokenExpires: Date.now() + (user.expiresIn - 60) * 1000,
           name: user.name,
           email: user.email,
           slug: user.slug,
           profilePictureUrl: user.profilePictureUrl,
           isNewUser: user.isNewUser,
           redirect: user.redirect,
-          role: user.role
+          role: user.role,
         };
       }
 
       // Return previous token if the access token has not expired yet
       //console.log("token.accessTokenExpires", token.accessTokenExpires);
       if (Date.now() < token.accessTokenExpires) {
-        return token
+        return token;
       }
 
       // Access token has expired, try to update it
       //console.log("Refresh Call");
-      return refreshAccessToken(token)
+      return refreshAccessToken(token);
     },
-    async session({
-      session,
-      token
-    }) {
+    async session({ session, token }) {
       session.user.accessToken = token.accessToken;
       session.user.refreshToken = token.refreshToken;
       session.user.accessTokenExpires = token.accessTokenExpires;
@@ -157,12 +146,12 @@ const options = {
     },
   },
   theme: {
-    colorScheme: 'auto', // "auto" | "dark" | "light"
-    brandColor: '', // Hex color code #33FF5D
-    logo: '/logo.png', // Absolute URL to image
+    colorScheme: "auto", // "auto" | "dark" | "light"
+    brandColor: "", // Hex color code #33FF5D
+    logo: "/logo.png", // Absolute URL to image
   },
   // Enable debug messages in the console if you are having problems
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === "development",
 };
 
 // Export a named function instead of an anonymous arrow function
