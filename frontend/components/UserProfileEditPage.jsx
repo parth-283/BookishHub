@@ -1,8 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
-import { profileValidationSchema } from "./profileValidationSchema";
-import CoverImageEdit from "./CoverImageEdit";
-import ProfileImageEdit from "./ProfileImageEdit";
+// import { profileValidationSchema } from "./profileValidationSchema";
+// import CoverImageEdit from "./CoverImageEdit";
+// import ProfileImageEdit from "./ProfileImageEdit";
 import * as Yup from "yup";
 
 export const profileValidationSchema = Yup.object().shape({
@@ -59,9 +59,9 @@ const UserProfileEditPage = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         {/* Cover Image Edit */}
-        <CoverImageEdit handleImageUpload={handleCoverImageUpload} />
+        {/* <CoverImageEdit handleImageUpload={handleCoverImageUpload} /> */}
         {/* Profile Image Edit */}
-        <ProfileImageEdit handleImageUpload={handleProfileImageUpload} />
+        {/* <ProfileImageEdit handleImageUpload={handleProfileImageUpload} /> */}
         {/* Profile Form */}
         <form onSubmit={formik.handleSubmit}>
           {/* First Name */}

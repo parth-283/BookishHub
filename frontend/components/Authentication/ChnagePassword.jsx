@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { accountService } from "@/services/account.service";
 import Alert from "../Alert";
 import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,6 +23,9 @@ const ChangePassword = () => {
   const [isServerError, setIsServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema),
@@ -50,6 +53,9 @@ const ChangePassword = () => {
       });
   };
 
+  const toggleShowPassword = (setState) => {
+    setState((prevState) => !prevState);
+  };
   return (
     <div>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -115,28 +121,33 @@ const ChangePassword = () => {
                 </p>
               )}
             </div>
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <label
-                htmlFor="confirmNewPassword"
+                htmlFor="currentPassword"
                 className="block text-sm font-medium text-gray-700"
               >
-                Confirm New Password
+                Current Password
               </label>
               <input
-                type="password"
-                id="confirmNewPassword"
-                name="confirmNewPassword"
-                placeholder="Confirm your new password"
-                {...register("confirmNewPassword")}
+                type={showCurrentPassword ? "text" : "password"}
+                id="currentPassword"
+                name="currentPassword"
+                placeholder="Enter your current password"
+                {...register("currentPassword")}
                 className={`mt-1 p-2 w-full border rounded-md ${
-                  errors?.confirmNewPassword
-                    ? "border-red-500"
-                    : "border-gray-300"
+                  errors?.currentPassword ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {errors?.confirmNewPassword && (
+              <button
+                type="button"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
+                onClick={() => toggleShowPassword(setShowCurrentPassword)}
+              >
+                {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+              {errors?.currentPassword && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors?.confirmNewPassword.message}
+                  {errors?.currentPassword.message}
                 </p>
               )}
             </div>

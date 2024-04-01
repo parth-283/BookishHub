@@ -7,16 +7,17 @@ import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
   const router = useRouter();
-  let ishideHeader = [
+  let ishideFooter = [
     "/login",
     "/forgot-password",
     "/reset-password",
     "/signup",
     "/signin",
   ];
+
   return (
     <>
-      {/* {!ishideHeader.includes(router.asPath) && (
+      {/* {!ishideFooter.includes(router.asPath) && (
       )} */}
       <div className="min-h-screen flex flex-col justify-between">
         <header>
@@ -28,7 +29,7 @@ const Layout = ({ children }) => {
             <CustomProvider>{children}</CustomProvider>
           </main>
         </div>
-        {!ishideHeader.includes(router.asPath) && (
+        {!ishideFooter.includes(router.asPath.split("?")[0]) && (
           <div>
             <Footer />
           </div>

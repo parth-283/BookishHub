@@ -87,7 +87,11 @@ const UserProfilePage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors } = {}, // Use optional chaining here
+    isDirty,
+    isSubmitting,
+    touchedFields,
+    submitCount,
   } = useFormik({
     initialValues: {
       firstName: userProfile?.firstName || "",
@@ -128,7 +132,7 @@ const UserProfilePage = () => {
       .then((res) => {
         setuserProfile(res.data);
       })
-      .catch((errorMessage) => { });
+      .catch((errorMessage) => {});
   };
 
   const handleUploadImage = async (image, coverImage) => {
@@ -142,7 +146,6 @@ const UserProfilePage = () => {
   };
 
   const handleImageUpload = (e, coverImage) => {
-
     const file = e.target.files[0];
     handleUploadImage(file, coverImage);
   };
@@ -157,7 +160,6 @@ const UserProfilePage = () => {
 
   return (
     <>
-
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Cover Image */}
@@ -210,9 +212,7 @@ const UserProfilePage = () => {
                 {/* Edit icon for Profile Image */}
                 {isEdit && (
                   <>
-                    <div
-                      className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                    >
+                    <div className="absolute inset-0 flex items-center justify-center cursor-pointer">
                       <img
                         src="/Images/camera.png"
                         accept="image/*"
@@ -237,34 +237,40 @@ const UserProfilePage = () => {
 
           {/* User Data */}
           <div className="p-6 bg-gray-100 rounded-lg">
-            {!isEdit && <div className="flex items-center justify-between">
-              <div className="mr-4">
-                <h1 className="text-3xl font-semibold mb-4">
-                  {userProfile?.firstName} {userProfile?.lastName}
-                </h1>
-                <p className="text-gray-800 font-semibold">
-                  {userProfile?.about}
-                </p>
-              </div>
-              <div className="flex items-center space-x-4">
-                {/* Edit button */}
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300"
-                  onClick={(e) => handleEdit(e)}
-                >
-                  Edit
-                </button>
-                {/* Delete button */}
-                {/* <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300">
+            {!isEdit && (
+              <div className="flex items-center justify-between">
+                <div className="mr-4">
+                  <h1 className="text-3xl font-semibold mb-4">
+                    {userProfile?.firstName} {userProfile?.lastName}
+                  </h1>
+                  <p className="text-gray-800 font-semibold">
+                    {userProfile?.about}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  {/* Edit button */}
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300"
+                    onClick={(e) => handleEdit(e)}
+                  >
+                    Edit
+                  </button>
+                  {/* Delete button */}
+                  {/* <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300">
                 Delete
               </button> */}
+                </div>
               </div>
-            </div>}
+            )}
 
-            {isEdit ?
-              <UserProfileEditPage isEdit={isEdit} setIsEdit={setIsEdit} userProfile={userProfile} />
-
-              : <div className="grid grid-cols-2 gap-4 mt-10">
+            {isEdit ? (
+              <UserProfileEditPage
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
+                userProfile={userProfile}
+              />
+            ) : (
+              <div className="grid grid-cols-2 gap-4 mt-10">
                 <div>
                   <p className="text-gray-600 mb-2">Email:</p>
                   <p className="text-gray-800 font-semibold">
@@ -280,7 +286,9 @@ const UserProfilePage = () => {
                 </div>
                 <div>
                   <p className="text-gray-600 mb-2">Date of Birth:</p>
-                  <p className="text-gray-800 font-semibold">{userProfile?.dob}</p>
+                  <p className="text-gray-800 font-semibold">
+                    {userProfile?.dob}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-600 mb-2">Address:</p>
@@ -298,21 +306,32 @@ const UserProfilePage = () => {
               <p className="text-gray-600 mb-2">About:</p>
               <p className="text-gray-800 font-semibold">{userProfile?.about}</p>
             </div> */}
-              </div>}
+              </div>
+            )}
           </div>
 
           {/* User's Books */}
           <div className="p-6 bg-gray-100 rounded-lg">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold">Your books</h2>
-              <button onClick={handleAddBookClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <button
+                onClick={handleAddBookClick}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
                 Add New Book
               </button>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {userProfile?.books.map((book) => (
-                <div key={book.id} className="border border-gray-200 rounded-md overflow-hidden">
-                  <img src={book.coverImage} alt={book.title} className="w-full h-48 object-cover" />
+                <div
+                  key={book.id}
+                  className="border border-gray-200 rounded-md overflow-hidden"
+                >
+                  <img
+                    src={book.coverImage}
+                    alt={book.title}
+                    className="w-full h-48 object-cover"
+                  />
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mb-2">{book.title}</h3>
                     <p className="text-gray-600 mb-2">Author: {book.author}</p>
@@ -322,7 +341,9 @@ const UserProfilePage = () => {
                       <div className="flex items-center">
                         {/* Tailwind CSS icons */}
                         <StarIcon className="h-5 w-5 text-yellow-500 mr-1" />
-                        <span className="text-gray-600 mr-4">{book.rating}</span>
+                        <span className="text-gray-600 mr-4">
+                          {book.rating}
+                        </span>
                         <HeartIcon className="h-5 w-5 text-blue-500 mr-1" />
                         <span className="text-gray-600">{book.likes}</span>
                       </div>
@@ -351,5 +372,6 @@ const UserProfilePage = () => {
   );
 };
 
-export default UserProfilePage;
+UserProfilePage.auth = true;
 
+export default UserProfilePage;
