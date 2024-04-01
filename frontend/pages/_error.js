@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
 
 const ErrorPage = ({ statusCode }) => {
   return (
@@ -37,11 +36,6 @@ const ErrorPage = ({ statusCode }) => {
       )}
     </div>
   );
-};
-
-ErrorPage.getInitialProps = ({ res, err }) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  return { statusCode };
 };
 
 export default ErrorPage;

@@ -29,9 +29,9 @@ const Layout = ({ children }) => {
           </main>
         </div>
         {!ishideHeader.includes(router.asPath) && (
-          <footer>
+          <div>
             <Footer />
-          </footer>
+          </div>
         )}
       </div>
     </>

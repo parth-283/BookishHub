@@ -72,5 +72,6 @@ const ProfileTab = () => {
     );
 };
 
+SettingsPage.auth = true
 
 export default SettingsPage;

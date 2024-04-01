@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 function Footer() {
@@ -20,36 +21,36 @@ function Footer() {
               <h2 className="text-xl font-bold mb-4">Quick Links</h2>
               <ul className="list-none">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/category"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     Categories
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/about"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     About Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/contact"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -59,36 +60,36 @@ function Footer() {
               <h2 className="text-xl font-bold mb-4">Connect With Us</h2>
               <ul className="list-none">
                 <li>
-                  <a
+                  <Link
                     href="#"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     Facebook
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="#"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     Twitter
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="#"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     Instagram
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="#"
                     className="text-sm hover:text-gray-400 transition duration-300"
                   >
                     LinkedIn
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
