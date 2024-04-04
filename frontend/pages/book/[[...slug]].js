@@ -1,6 +1,7 @@
 import BooksList from "@/components/BooksList";
 import { booksService } from "@/services/books.service";
 import { categoryService } from "@/services/category.service";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -69,6 +70,9 @@ export default function Book() {
   const [booksList, setBooksList] = useState([]);
   const [categoryDetail, setCategoryDetail] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     if (isDataLoaded) {
@@ -81,12 +85,12 @@ export default function Book() {
   }, []);
 
   const getCategoryBySlug = () => {
-    ;
     categoryService
-      .getCategoryBySlug(slug[0])
+      .getCategoryBySlug(slug[0], currentPage, limit) // Pass currentPage and limit
       .then((res) => {
-        setBooksList(res.books);
-        setCategoryDetail(res);
+        setBooksList(res.data.books);
+        setCategoryDetail(res.data);
+        setTotalPages(res.totalPages);
         setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
@@ -97,15 +101,30 @@ export default function Book() {
 
   const getBooks = async () => {
     booksService
-      .getBooks()
+      .getBooks(currentPage, limit)
       .then((res) => {
-        setBooksList(res);
+        setBooksList(res.data);
+        setTotalPages(res.totalPages);
         setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
         setIsDataLoaded(false);
         console.log(errorMessage, "errorMessage");
       });
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setIsDataLoaded(true);
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setIsDataLoaded(true);
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   return (
@@ -148,10 +167,31 @@ export default function Book() {
           {/* Book cards */}
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {booksList?.length > 0 && (booksList?.map((book) => (
+              {!isDataLoaded && booksList?.length > 0 && (booksList?.map((book) => (
                 <BooksList key={book.id} book={book} />
               )))}
             </div>
+
+            {!isDataLoaded && booksList?.length > 0 && <div className="flex justify-center items-center mt-8">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className={`flex justify-center items-center px-4 py-2 mr-2 ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-500 hover:bg-gray-600'
+                  } rounded`}
+              >
+                <ChevronLeftIcon className="w-5 h-5 mr-1" /> Previous
+              </button>
+              ({currentPage})
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`flex justify-center items-center px-4 py-2 ml-2 ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-500 hover:bg-gray-600'
+                  } rounded`}
+              >
+                Next <ChevronRightIcon className="w-5 h-5 ml-1" />
+              </button>
+            </div>}
+
             <>
               {isDataLoaded && (
                 <div className="my-16 flex items-center justify-center">

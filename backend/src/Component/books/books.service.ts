@@ -1,4 +1,10 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -98,8 +104,25 @@ export class BooksService {
     }
   }
 
-  async findAll(): Promise<Book[]> {
-    return await this.bookModel.find().exec();
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Book[]; totalPages: number }> {
+    try {
+      const skip = (page - 1) * limit;
+
+      const data = await this.bookModel.find().skip(skip).limit(limit).exec();
+
+      const totalCount = await this.bookModel.countDocuments().exec();
+      const totalPages = Math.ceil(totalCount / limit);
+
+      return { data: data, totalPages: totalPages };
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findOne(id: string): Promise<Book | null> {

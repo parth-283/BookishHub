@@ -31,6 +31,26 @@ export class CategoryService {
     }
   }
 
+  async findAllByPagination(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Category[]; totalPages: number }> {
+    try {
+      const skip = (page - 1) * limit;
+      let data = await this.categoryModel.find().skip(skip).limit(limit).exec();
+
+      const totalCount = await this.categoryModel.countDocuments().exec();
+      const totalPages = Math.ceil(totalCount / limit);
+
+      return { data: data, totalPages: totalPages };
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async getAllCategoryList(): Promise<Category[]> {
     try {
       return this.categoryModel
@@ -45,8 +65,33 @@ export class CategoryService {
     }
   }
 
-  async findOneBySlug(slug: string): Promise<Category> {
-    return this.categoryModel.findOne({ slug: slug }).populate('books').exec();
+  async findOneBySlug(
+    slug: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Category; totalPages: number }> {
+    try {
+      const skip = (page - 1) * limit;
+
+      const data = await this.categoryModel
+        .findOne({ slug: slug })
+        .skip(skip)
+        .limit(limit)
+        .populate('books')
+        .exec();
+
+      const totalCount = await this.categoryModel
+        .countDocuments({ slug: slug })
+        .exec();
+      const totalPages = Math.ceil(totalCount / limit);
+
+      return { data: data, totalPages: totalPages };
+    } catch (error) {
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findOneByID(id: string): Promise<Category> {

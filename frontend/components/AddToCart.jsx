@@ -99,6 +99,8 @@ const AddToCart = () => {
                 <Image
                   src={book.image}
                   alt={book.name}
+                  width={100}
+                  height={100}
                   className="w-full h-full object-cover"
                 />
               </div>

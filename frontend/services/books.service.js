@@ -11,8 +11,8 @@ export const booksService = {
   addBook,
 };
 
-function getBooks() {
-  return fetchWrapper.getWithoutToken(`${baseUrl}/books`).then((result) => {
+function getBooks(page, limit) {
+  return fetchWrapper.getWithoutToken(`${baseUrl}/books?page=${page}&limit=${limit}`).then((result) => {
     return result;
   });
 }

@@ -8,6 +8,7 @@ import {
   Put,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Category } from './schema/category.schema/category.schema';
@@ -29,9 +30,21 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+  @Get('pagination')
+  findAllByPagination(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ data: Category[]; totalPages: number }> {
+    return this.categoryService.findAllByPagination(page, limit);
+  }
+
   @Get('getBySlug/:slug')
-  findOneBySlug(@Param('slug') slug: string): Promise<Category> {
-    return this.categoryService.findOneBySlug(slug);
+  findOneBySlug(
+    @Param('slug') slug: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ data: Category; totalPages: number }> {
+    return this.categoryService.findOneBySlug(slug, page, limit);
   }
 
   @Get('getById/:id')

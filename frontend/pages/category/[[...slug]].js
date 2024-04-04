@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { categoryService } from "@/services/category.service";
 import Image from "next/image";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const product = [
   {
@@ -89,6 +90,9 @@ export default function Book({ book }) {
   const { slug } = router.query;
   const [category, setCategory] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     if (isDataLoaded) {
@@ -98,33 +102,60 @@ export default function Book({ book }) {
         getCategory();
       }
     }
-  }, []);
+  }, [currentPage]);
 
   const getCategory = () => {
     categoryService
-      .getCategory()
+      .getCategoryByPagination(currentPage, limit)
       .then((res) => {
-        setCategory(res);
+        setCategory(res.data);
+        setTotalPages(res.totalPages);
         setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
+        setIsDataLoaded(false);
         console.log(errorMessage, "errorMessage");
       });
   };
+
   const getCategoryBySlug = () => {
     categoryService
-      .getCategoryBySlug(slug)
+      .getCategoryBySlug(slug, currentPage, limit)
       .then((res) => {
         setCategory(res);
         setIsDataLoaded(false);
       })
       .catch((errorMessage) => {
         console.log(errorMessage, "errorMessage");
+        setIsDataLoaded(false);
       });
+  };
+
+  const handleScrollToCategoryDivider = () => {
+    const categoryDivider = document.getElementById("category-divider");
+    if (categoryDivider) {
+      categoryDivider.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleRedirect = (slug) => {
     router.push(`/book/${slug}`);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setIsDataLoaded(true);
+      setCurrentPage((prevPage) => prevPage + 1);
+      handleScrollToCategoryDivider()
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setIsDataLoaded(true);
+      setCurrentPage((prevPage) => prevPage - 1);
+      handleScrollToCategoryDivider()
+    }
   };
 
   return (
@@ -136,6 +167,8 @@ export default function Book({ book }) {
             <Image
               src="/Images/category-1.jpg"
               // src="https://source.unsplash.com/featured/?bookshelf"
+              width={1000}
+              height={250}
               alt="Category Name"
               className="w-full h-64 object-cover opacity-80"
             />
@@ -152,7 +185,7 @@ export default function Book({ book }) {
             </div>
           </div>
 
-          <hr className="border-gray-700 border-2 my-8" />
+          <hr id="category-divider" className="border-gray-700 border-2 my-8" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {category?.length > 0 && category.map((item, index) => {
@@ -165,6 +198,8 @@ export default function Book({ book }) {
                   <div className="mb-4 relative rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-lg">
                     <Image
                       src={item.image}
+                      width={500}
+                      height={256}
                       alt="Book Title"
                       className="w-full h-64 object-cover"
                     />
@@ -183,6 +218,26 @@ export default function Book({ book }) {
             })}
           </div>
 
+          {!isDataLoaded && category?.length > 0 && <div className="flex justify-center items-center mt-8">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={`flex justify-center items-center px-4 py-2 mr-2 ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-500 hover:bg-gray-600'
+                } rounded`}
+            >
+              <ChevronLeftIcon className="w-5 h-5 mr-1" /> Previous
+            </button>
+            ({currentPage})
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`flex justify-center items-center px-4 py-2 ml-2 ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-500 hover:bg-gray-600'
+                } rounded`}
+            >
+              Next <ChevronRightIcon className="w-5 h-5 ml-1" />
+            </button>
+          </div>}
+
           <>
             {isDataLoaded && (
               <div className="my-16 flex items-center justify-center">
@@ -194,9 +249,9 @@ export default function Book({ book }) {
             {!isDataLoaded && category?.length == 0 && (
               <div className="w-full flex justify-center">
                 <div className="bg-gray-100 rounded-lg shadow-lg p-8 transform hover:scale-105 transition duration-300">
-                  <h2 className="text-3xl font-bold text-gray-800">Book not found</h2>
+                  <h2 className="text-3xl font-bold text-gray-800">Category not found</h2>
                   <p className="mt-4 text-lg text-gray-600">
-                    {`We couldn't find the book you're looking for. Please try again later.`}
+                    {`We couldn't find the category you're looking for. Please try again later.`}
                   </p>
                 </div>
               </div>

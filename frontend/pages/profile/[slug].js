@@ -178,6 +178,8 @@ const UserProfilePage = () => {
                 "https://source.unsplash.com/featured/800x200/?user,cover"
               }
               alt="Cover"
+              width={1000}
+              height={256}
               className="w-full h-96"
             />
             {/* Edit icon for Cover Image */}
@@ -191,6 +193,8 @@ const UserProfilePage = () => {
                     src="/Images/camera.png"
                     accept="image/*"
                     alt="camera"
+                    width={50}
+                    height={50}
                     className="bg-black bg-opacity-60 rounded-lg w-5"
                   />
                   {/* Hidden file input */}
@@ -213,6 +217,8 @@ const UserProfilePage = () => {
                     userProfile?.profileImage?.secure_url ||
                     "https://source.unsplash.com/featured/800x200/?user,profileImage"
                   }
+                  width={800}
+                  height={200}
                   alt="User"
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -224,6 +230,8 @@ const UserProfilePage = () => {
                         src="/Images/camera.png"
                         accept="image/*"
                         alt="camera"
+                        width={50}
+                        height={50}
                         className="bg-black bg-opacity-60 rounded-lg w-5"
                         onClick={() => fileInputRef.current.click()}
                       />
@@ -337,6 +345,8 @@ const UserProfilePage = () => {
                   <Image
                     src={book.coverImage}
                     alt={book.title}
+                    width={1000}
+                    height={256}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">

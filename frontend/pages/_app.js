@@ -11,6 +11,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PageLoader from "@/components/PageLoader";
 import "react-datepicker/dist/react-datepicker.css";
+import getConfig from "next/config";
 
 export default class MyApp extends App {
   render() {
@@ -19,7 +20,12 @@ export default class MyApp extends App {
       pageProps: { session, ...pageProps },
     } = this.props;
 
-    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+    const { publicRuntimeConfig } = getConfig();
+    const stripePublicKey = `${publicRuntimeConfig.stripePublicKey}`;
+
+    const stripePromise = loadStripe(stripePublicKey, {
+      apiVersion: '2020-08-27',
+    });
 
     Router.events.on("routeChangeStart", () => NProgress.start());
     Router.events.on("routeChangeComplete", () => NProgress.done());

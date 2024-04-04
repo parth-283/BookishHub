@@ -10,6 +10,8 @@ const BooksList = ({ book }) => {
         <Image
           src={book?.image?.secure_url}
           alt="Book Title"
+          width={200}
+          height={250}
           className="w-full h-64 object-cover"
         />
       </div>

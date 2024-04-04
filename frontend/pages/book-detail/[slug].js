@@ -139,6 +139,8 @@ const BookDetailPage = () => {
               <Image
                 src={book?.image?.secure_url}
                 alt={book.title}
+                width={1000}
+                height={1000}
                 className="w-full h-auto rounded-t-lg md:rounded-l-lg md:rounded-t-none"
               />
             </div>

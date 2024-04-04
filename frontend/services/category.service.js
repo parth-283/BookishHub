@@ -8,6 +8,7 @@ export const categoryService = {
   getCategory,
   getCategoryBySlug,
   categoryList,
+  getCategoryByPagination,
 };
 
 function getCategory() {
@@ -18,9 +19,17 @@ function getCategory() {
     });
 }
 
-function getCategoryBySlug(slug) {
+function getCategoryByPagination(page, limit) {
   return fetchWrapper
-    .getWithoutToken(`${baseUrl}/categories/getBySlug/${slug}`)
+    .getWithoutToken(`${baseUrl}/categories/pagination?page=${page}&limit=${limit}`)
+    .then((result) => {
+      return result;
+    });
+}
+
+function getCategoryBySlug(slug, page, limit) {
+  return fetchWrapper
+    .getWithoutToken(`${baseUrl}/categories/getBySlug/${slug}?page=${page}&limit=${limit}`)
     .then((result) => {
       return result;
     });
