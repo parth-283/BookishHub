@@ -50,17 +50,17 @@ function Auth({ children }) {
   const { data: session, status } = useSession({ required: true });
   const router = useRouter();
   const restrictedPage = ["/", "/signin", "/signup"];
-  const authenticatedPage = ["/dashboard", "/my-courses"];
+  const authenticatedPage = ["/profile", "/my-courses"];
 
   if (status === "loading") {
     return <PageLoader />;
   } else if (status === "authenticated") {
     localStorage.setItem("user", JSON.stringify(session.user));
-    if (restrictedPage.includes(router.pathname)) {
-      router.push("/dashboard");
+    if (restrictedPage.includes(router.asPath.split("?")[0])) {
+      router.push("/profile");
     }
   } else if (status == "unauthenticated") {
-    if (authenticatedPage.includes(router.pathname)) {
+    if (authenticatedPage.includes(router.asPath.split("?")[0])) {
       router.push("/signin");
     }
     localStorage.removeItem("user");

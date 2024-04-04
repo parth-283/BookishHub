@@ -81,6 +81,9 @@ export class User {
     token: string;
     isValid: boolean;
   }[];
+
+  @Prop({ type: [{ bookId: String, quantity: Number }], default: [] })
+  cart: { bookId: string; quantity: number }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

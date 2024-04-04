@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -7,7 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { EmailService } from '../email/email.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ImagesService } from '../images/images.service';
-import { Book } from '../books/schemas/book.schema';
+import { Book, BookDocument } from '../books/schemas/book.schema';
 import { BooksService } from '../books/books.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -16,6 +22,7 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Book.name) private bookModel: Model<BookDocument>,
     private readonly emailService: EmailService,
     private readonly imagesService: ImagesService,
     private readonly bookService: BooksService,
@@ -48,7 +55,7 @@ export class UserService {
       // Generate verification token
       const verificationToken = this.jwtService.sign(
         { email: createUserDto.email },
-        { secret: process.env.JWT_SECRET},
+        { secret: process.env.JWT_SECRET },
       );
 
       this.logger.log('Create new user with id:', createdUser.id);
@@ -185,5 +192,57 @@ export class UserService {
     return this.userModel
       .findByIdAndUpdate(id, { $pull: { books: bookId } }, { new: true })
       .exec();
+  }
+
+  async addToCart(
+    userId: string,
+    bookId: string,
+    quantity: number,
+  ): Promise<Book> {
+    const user = await this.userModel.findOne({ id: userId }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const book = await this.bookModel.findOne({ id: bookId }).exec();
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+
+    user.cart.push({ bookId, quantity });
+
+    await user.save();
+    return book;
+  }
+
+  async removeFromCart(userId: string, bookId: string): Promise<void> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const index = user.cart.findIndex((item) => item.bookId === bookId);
+    if (index !== -1) {
+      user.cart.splice(index, 1);
+      await user.save();
+    }
+  }
+
+  async getAllCartItems(
+    userId: string,
+  ): Promise<{ book: Book; quantity: number }[]> {
+    const user = await this.userModel.findOne({ id: userId }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const cartItems = await Promise.all(
+      user.cart.map(async (item) => {
+        const book = await this.bookModel.findOne({ id: item.bookId }).exec();
+        return { book, quantity: item.quantity };
+      }),
+    );
+
+    return cartItems;
   }
 }

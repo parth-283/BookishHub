@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { categoryService } from "@/services/category.service";
+import Image from "next/image";
 
 const product = [
   {
@@ -132,7 +133,7 @@ export default function Book({ book }) {
         <div className="absolute inset-0 bg-black-700 opacity-50"></div>
         <div className="container mx-auto px-10 relative z-10">
           <div className="relative bg-white rounded-lg shadow-md overflow-hidden transition duration-300 transform scale-105 shadow-lg">
-            <img
+            <Image
               src="/Images/category-1.jpg"
               // src="https://source.unsplash.com/featured/?bookshelf"
               alt="Category Name"
@@ -162,7 +163,7 @@ export default function Book({ book }) {
                   onClick={() => handleRedirect(item.slug)}
                 >
                   <div className="mb-4 relative rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-lg">
-                    <img
+                    <Image
                       src={item.image}
                       alt="Book Title"
                       className="w-full h-64 object-cover"

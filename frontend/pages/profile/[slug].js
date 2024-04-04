@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import UserProfileEditPage from "@/components/UserProfileEditPage";
 import { HeartIcon, StarIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import AddBookForm from "@/components/AddBookForm";
+import ReactStars from "react-rating-stars-component";
+import Image from "next/image";
 
 // Define validation schema using Yup
 export const userProfileValidationSchema = Yup.object().shape({
@@ -76,6 +78,11 @@ const books = [
   // Add more books as needed
 ];
 
+const bookRating = {
+  size: 30,
+  edit: false
+};
+
 const UserProfilePage = () => {
   const router = useRouter();
   const { slug } = router.query;
@@ -118,7 +125,7 @@ const UserProfilePage = () => {
   });
 
   useEffect(() => {
-    getUserPrifleData();
+    getUserProfileData();
   }, [slug]);
 
   const handleCancelEdit = () => {
@@ -126,13 +133,13 @@ const UserProfilePage = () => {
     // Reset the form values
   };
 
-  const getUserPrifleData = async () => {
+  const getUserProfileData = async () => {
     await userService
       .GetUserProfile(slug)
       .then((res) => {
-        setuserProfile(res.data);
+        setUserProfile(res.data);
       })
-      .catch((errorMessage) => {});
+      .catch((errorMessage) => { });
   };
 
   const handleUploadImage = async (image, coverImage) => {
@@ -141,7 +148,7 @@ const UserProfilePage = () => {
       image,
       coverImage
     );
-    getUserPrifleData();
+    getUserProfileData();
     console.log(profileImage, "profileImage");
   };
 
@@ -165,7 +172,7 @@ const UserProfilePage = () => {
           {/* Cover Image */}
           <div className="relative">
             {/* Cover Image */}
-            <img
+            <Image
               src={
                 userProfile?.coverImage?.secure_url ||
                 "https://source.unsplash.com/featured/800x200/?user,cover"
@@ -180,7 +187,7 @@ const UserProfilePage = () => {
                   className="absolute bottom-0 right-0 flex items-center justify-center cursor-pointer bg-white rounded-full p-1 mr-8 mb-8"
                   onClick={() => fileInputRef.current.click()}
                 >
-                  <img
+                  <Image
                     src="/Images/camera.png"
                     accept="image/*"
                     alt="camera"
@@ -201,7 +208,7 @@ const UserProfilePage = () => {
             {/* Profile Image */}
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-8">
               <div className="relative w-32 h-32 rounded-full border-4 border-white shadow-md">
-                <img
+                <Image
                   src={
                     userProfile?.profileImage?.secure_url ||
                     "https://source.unsplash.com/featured/800x200/?user,profileImage"
@@ -213,7 +220,7 @@ const UserProfilePage = () => {
                 {isEdit && (
                   <>
                     <div className="absolute inset-0 flex items-center justify-center cursor-pointer">
-                      <img
+                      <Image
                         src="/Images/camera.png"
                         accept="image/*"
                         alt="camera"
@@ -327,7 +334,7 @@ const UserProfilePage = () => {
                   key={book.id}
                   className="border border-gray-200 rounded-md overflow-hidden"
                 >
-                  <img
+                  <Image
                     src={book.coverImage}
                     alt={book.title}
                     className="w-full h-48 object-cover"
@@ -337,16 +344,12 @@ const UserProfilePage = () => {
                     <p className="text-gray-600 mb-2">Author: {book.author}</p>
                     <p className="text-gray-600 mb-2">Genre: {book.genre}</p>
                     <p className="text-gray-600 mb-2">Price: ${book.price}</p>
-                    <div className="flex items-center justify-between">
+                    <div className="flex justify-between items-center">
                       <div className="flex items-center">
-                        {/* Tailwind CSS icons */}
-                        <StarIcon className="h-5 w-5 text-yellow-500 mr-1" />
-                        <span className="text-gray-600 mr-4">
-                          {book.rating}
-                        </span>
                         <HeartIcon className="h-5 w-5 text-blue-500 mr-1" />
-                        <span className="text-gray-600">{book.likes}</span>
+                        <span className="text-gray-600">{book.likes ? book.likes : 0}</span>
                       </div>
+                      <ReactStars {...bookRating} value={book.rating} />
                     </div>
                   </div>
                 </div>

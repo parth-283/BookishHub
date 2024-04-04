@@ -2,6 +2,7 @@ import BooksList from "@/components/BooksList";
 import { booksService } from "@/services/books.service";
 import { categoryService } from "@/services/category.service";
 import Head from "next/head";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -123,9 +124,11 @@ export default function Book() {
         <div className="absolute inset-0 bg-black-700 opacity-50"></div>
         <div className="container mx-auto px-10 relative z-10">
           <div className="relative bg-white rounded-lg shadow-md overflow-hidden transition duration-300 transform scale-105 shadow-lg">
-            <img
+            <Image
               src={categoryDetail?.image ? categoryDetail.image : "/Images/category-2.jpg"}
               alt="Category Name"
+              width={1000}
+              height={250}
               className="w-full h-64 object-cover opacity-80"
             />
             <div className="absolute z-10 inset-0 flex text-center items-center justify-center">

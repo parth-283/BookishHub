@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
   const router = useRouter();
-  let ishideFooter = [
+  let isHideFooter = [
     "/login",
     "/forgot-password",
     "/reset-password",
@@ -15,21 +15,25 @@ const Layout = ({ children }) => {
     "/signin",
   ];
 
+  const isFooter = isHideFooter.includes(router.asPath.split("?")[0]);
+
   return (
     <>
-      {/* {!ishideFooter.includes(router.asPath) && (
-      )} */}
-      <div className="min-h-screen flex flex-col justify-between">
+      <div
+        className={`${
+          isFooter ? "" : "min-h-screen flex flex-col justify-between"
+        }`}
+      >
         <header>
           <Header />
         </header>
-        <div className="min-h-[35rem]">
+        <div className={`${isFooter ? "" : "min-h-[35rem]"}`}>
           <main>
             {" "}
             <CustomProvider>{children}</CustomProvider>
           </main>
         </div>
-        {!ishideFooter.includes(router.asPath.split("?")[0]) && (
+        {!isFooter && (
           <div>
             <Footer />
           </div>

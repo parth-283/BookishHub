@@ -10,6 +10,8 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
@@ -19,6 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/utils/multer.config';
 import { Book } from '../books/schemas/book.schema';
 import { AddRatingDto } from '../books/dto/rating.book.dto';
+import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -103,5 +106,35 @@ export class UserController {
     @Param('bookId') bookId: string,
   ): Promise<User | null> {
     return this.userService.removeBookFromUser(id, bookId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('cart/add/:bookId/:quantity')
+  async addToCart(
+    @Req() req: any,
+    @Param('bookId') bookId: string,
+    @Param('quantity') quantity: number,
+  ): Promise<Book> {
+    const userId = req.user.sub;
+    return this.userService.addToCart(userId, bookId, quantity);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('cart/remove/:bookId')
+  async removeFromCart(
+    @Req() req: any,
+    @Param('bookId') bookId: string,
+  ): Promise<void> {
+    const userId = req.user.sub;
+    return this.userService.removeFromCart(userId, bookId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('get/cart')
+  async getAllCartItems(
+    @Req() req: any,
+  ): Promise<{ book: Book; quantity: number }[]> {
+    const userId = req.user.sub;
+    return this.userService.getAllCartItems(userId);
   }
 }

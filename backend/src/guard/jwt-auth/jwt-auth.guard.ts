@@ -1,6 +1,12 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express'; // Import the Request interface from Express
+import { Observable } from 'rxjs';
+
+// Define a new interface that extends the default Request interface
+interface AuthenticatedRequest extends Request {
+  user: { username: string; sub: string; role: string };
+}
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -9,7 +15,7 @@ export class JwtAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>(); // Use the AuthenticatedRequest type here
     const authToken = request.headers['authorization'];
 
     if (!authToken || !authToken.startsWith('Bearer ')) {

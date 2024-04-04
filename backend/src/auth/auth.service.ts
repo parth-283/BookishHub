@@ -77,6 +77,7 @@ export class AuthService {
       const { oldPassword, newPassword } = changePasswordDto;
       const user = await this.userService.findOneByEmail(email);
 
+      this.logger.log(`Checking password exist in storage or not.`);
       const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
       if (!isPasswordValid) {
         throw new BadRequestException('Old password is incorrect');

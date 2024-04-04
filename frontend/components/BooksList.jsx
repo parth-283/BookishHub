@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -6,7 +7,7 @@ const BooksList = ({ book }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {/* <Link href={`/books/${book.UUID}`} className="mb-4 relative rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-lg"> */}
       <div className="mb-4 relative rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105 hover:shadow-lg">
-        <img
+        <Image
           src={book?.image?.secure_url}
           alt="Book Title"
           className="w-full h-64 object-cover"

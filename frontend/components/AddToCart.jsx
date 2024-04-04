@@ -2,6 +2,7 @@ import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import Image from "next/image";
 
 const AddToCart = () => {
   const [booksInCart, setBooksInCart] = useState([
@@ -95,7 +96,7 @@ const AddToCart = () => {
               className="flex items-center border-b border-gray-300 py-4"
             >
               <div className="w-24 h-24 mr-4">
-                <img
+                <Image
                   src={book.image}
                   alt={book.name}
                   className="w-full h-full object-cover"

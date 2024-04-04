@@ -2,41 +2,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { booksService } from "@/services/books.service";
-
-const books = [
-  {
-    id: "1",
-    title: "Book Title 1",
-    slug: "book-title-1",
-    author: "Author 1",
-    genre: "Fantasy",
-    description: "Description of Book 1",
-    publicationDate: "2022-01-01",
-    coverImage: "https://source.unsplash.com/featured/?biography,books",
-    isbn: "978-1-2345-6789-0",
-    publisher: "Publisher 1",
-    totalPages: 300,
-    format: "Paperback",
-    price: 20,
-    availability: "In Stock",
-    tags: ["Fantasy", "Adventure"],
-    references: "References for Book 1",
-    weight: 400,
-    editionDate: "2021-12-01",
-    editionLanguage: "English",
-    country: "United States",
-    dimensions: {
-      Height: "10 inches",
-      Width: "8 inches",
-      Thickness: "1 inch",
-    },
-  },
-];
+import AddToCartModal from "@/components/AddToCartModal ";
+import Image from "next/image";
 
 const BookDetailPage = () => {
   const router = useRouter();
   const { slug } = router.query;
   const [book, setBook] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -52,13 +26,33 @@ const BookDetailPage = () => {
     })
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
+
+      {/* Add to cart modal */}
+      <div className="z-50">
+        <AddToCartModal isOpen={isModalOpen} closeModal={closeModal} />
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="flex flex-col md:flex-row">
             <div className="md:w-1/2 p-6">
-              <h1 className="text-3xl font-semibold mb-4">{book.title}</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-semibold mb-4">{book.title}</h1>
+                <div>
+                  <button onClick={openModal} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-2">
+                    Add to cart
+                  </button>
+                </div>
+              </div>
               <p className="text-gray-600 mb-2">Author: {book.author}</p>
               <p className="text-gray-600 mb-2">Genre: {book.genre}</p>
               <p className="text-gray-600 mb-4">{book.description}</p>
@@ -127,17 +121,22 @@ const BookDetailPage = () => {
                 </div>}
               </div>
               <div className="mt-6 flex justify-end">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-2">
-                  Update
-                </button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
-                  Delete
-                </button>
+                {isEditMode &&
+                  <>
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-2">
+                      Update
+                    </button>
+                    <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                      Delete
+                    </button>
+                  </>
+                }
+
               </div>
             </div>
 
-            <div className="md:w-1/2 relative">
-              <img
+            <div className="md:w-1/2 relative z-20">
+              <Image
                 src={book?.image?.secure_url}
                 alt={book.title}
                 className="w-full h-auto rounded-t-lg md:rounded-l-lg md:rounded-t-none"
@@ -151,7 +150,7 @@ const BookDetailPage = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };
