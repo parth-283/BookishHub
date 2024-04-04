@@ -3,7 +3,6 @@
 import webpack from "webpack";
 
 const nextConfig = {
-  distDir: 'build',
   compiler: {
     styledComponents: true,
   },
