@@ -24,7 +24,7 @@ export default class MyApp extends App {
     const stripePublicKey = `${publicRuntimeConfig.stripePublicKey}`;
 
     const stripePromise = loadStripe(stripePublicKey, {
-      apiVersion: '2020-08-27',
+      apiVersion: '2023-10-16',
     });
 
     Router.events.on("routeChangeStart", () => NProgress.start());

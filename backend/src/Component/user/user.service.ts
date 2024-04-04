@@ -16,10 +16,14 @@ import { ImagesService } from '../images/images.service';
 import { Book, BookDocument } from '../books/schemas/book.schema';
 import { BooksService } from '../books/books.service';
 import { JwtService } from '@nestjs/jwt';
+import Stripe from 'stripe';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-10-16',
+  });
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Book.name) private bookModel: Model<BookDocument>,
@@ -199,33 +203,105 @@ export class UserService {
     bookId: string,
     quantity: number,
   ): Promise<Book> {
+    // Find the user by userId in your database
     const user = await this.userModel.findOne({ id: userId }).exec();
     if (!user) {
+      // Throw an error if user is not found
       throw new NotFoundException('User not found');
     }
 
+    // Find the book by bookId in your database
     const book = await this.bookModel.findOne({ id: bookId }).exec();
     if (!book) {
+      // Throw an error if book is not found
       throw new NotFoundException('Book not found');
     }
 
-    user.cart.push({ bookId, quantity });
+    // Calculate total price based on the book's price and quantity
+    const totalPrice = book.price * quantity;
 
+    // Create a product on Stripe
+    const product = await this.stripe.products.create({
+      name: book.title, // Name of the product is set to the book title
+      description: book.description, // Description of the product can be the book's description
+      // You can add more details to the product if needed
+    });
+
+    // Set the price for the product on Stripe
+    const price = await this.stripe.prices.create({
+      product: product.id, // Product ID is used to associate the price with the product
+      unit_amount: totalPrice * 100, // Stripe requires amount in cents, so multiply by 100
+      currency: 'usd', // Change to your currency if needed
+      // You can add more options to the price if needed
+    });
+
+    // Check if the book is already in the user's cart
+    const existingCartItemIndex = user.cart.findIndex(
+      (item) => item.bookId === bookId,
+    );
+
+    if (existingCartItemIndex !== -1) {
+      // If the book is already in the cart, update the quantity and total price
+      user.cart[existingCartItemIndex].quantity += quantity;
+      user.cart[existingCartItemIndex].totalPrice += totalPrice;
+      // Associate the Stripe product and price IDs with the cart item
+      user.cart[existingCartItemIndex].stripeProductId = product.id;
+      user.cart[existingCartItemIndex].stripePriceId = price.id;
+    } else {
+      // If the book is not in the cart, add it to the cart with quantity, total price,
+      // and Stripe product and price IDs
+      user.cart.push({
+        bookId,
+        quantity,
+        totalPrice,
+        stripeProductId: product.id,
+        stripePriceId: price.id,
+      });
+    }
+
+    // Save the user's cart in the database
     await user.save();
+    // Return the book that was added to the cart
     return book;
   }
 
   async removeFromCart(userId: string, bookId: string): Promise<void> {
-    const user = await this.userModel.findById(userId).exec();
+    // Find the user by userId in your database
+    const user = await this.userModel.findOne({ id: userId }).exec();
     if (!user) {
+      // Throw an error if user is not found
       throw new NotFoundException('User not found');
     }
 
+    // Find the index of the book in the user's cart
     const index = user.cart.findIndex((item) => item.bookId === bookId);
-    if (index !== -1) {
-      user.cart.splice(index, 1);
-      await user.save();
+    if (index === -1) {
+      // If the book is not in the cart, throw an error
+      throw new NotFoundException('Book not found in cart');
     }
+
+    // Remove the book from the user's cart
+    const removedItem = user.cart.splice(index, 1)[0];
+
+    // If the removed item has associated Stripe product and price IDs
+    if (removedItem.stripeProductId && removedItem.stripePriceId) {
+      try {
+        // Delete the product from Stripe
+        await this.stripe.products.del(removedItem.stripeProductId);
+        // Delete the price from Stripe
+        await this.stripe.prices.retrieve(removedItem.stripePriceId);
+      } catch (error) {
+        // Log any errors that occur during Stripe deletion
+        console.error(
+          'Error deleting product/price from Stripe:',
+          error.message,
+        );
+        // Optionally, you can throw an error or handle it based on your requirements
+      }
+    }
+
+    // Save the updated user's cart in the database
+    await user.save();
   }
 
   async getAllCartItems(

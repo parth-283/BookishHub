@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Transition } from "@headlessui/react";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 const AddToCartModal = ({ isOpen, closeModal }) => {
   const [isAdded, setIsAdded] = useState(false);
@@ -20,22 +20,11 @@ const AddToCartModal = ({ isOpen, closeModal }) => {
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-[30rem]">
           <div className="flex items-center justify-center mb-4">
             {isAdded ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-green-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 19a9 9 0 110-18 9 9 0 010 18zm-1.293-7.707a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <CheckCircleIcon className="h-12 w-12 text-green-500" />
             ) : (
               <ShoppingCartIcon className="h-12 w-12 text-gray-500" />
             )}

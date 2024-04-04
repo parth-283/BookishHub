@@ -82,8 +82,25 @@ export class User {
     isValid: boolean;
   }[];
 
-  @Prop({ type: [{ bookId: String, quantity: Number }], default: [] })
-  cart: { bookId: string; quantity: number }[];
+  @Prop({
+    type: [
+      {
+        bookId: String,
+        quantity: Number,
+        totalPrice: Number,
+        stripeProductId: String,
+        stripePriceId: String,
+      },
+    ],
+    default: [],
+  })
+  cart: {
+    bookId: string;
+    quantity: number;
+    totalPrice: number;
+    stripeProductId: string;
+    stripePriceId: string;
+  }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

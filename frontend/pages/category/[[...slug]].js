@@ -218,7 +218,7 @@ export default function Book({ book }) {
             })}
           </div>
 
-          {!isDataLoaded && category?.length > 0 && <div className="flex justify-center items-center mt-8">
+          {!isDataLoaded && category?.length > 0 && totalPages != 1 && <div className="flex justify-center items-center mt-8">
             <button
               onClick={handlePrevPage}
               disabled={currentPage === 1}
@@ -227,7 +227,7 @@ export default function Book({ book }) {
             >
               <ChevronLeftIcon className="w-5 h-5 mr-1" /> Previous
             </button>
-            ({currentPage})
+            ({currentPage} / {totalPages})
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}

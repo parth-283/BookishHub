@@ -135,7 +135,7 @@ const BookDetailPage = () => {
               </div>
             </div>
 
-            <div className="md:w-1/2 relative z-20">
+            <div className="md:w-1/2 relative">
               <Image
                 src={book?.image?.secure_url}
                 alt={book.title}
