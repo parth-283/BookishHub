@@ -20,7 +20,7 @@ export class VerificationService {
       const email = decodedToken.email;
 
       this.logger.log(
-        `Retrieving the user from the database using the email address`,
+        `Retrieving the user from the database using the email address:${email}`,
       );
       const user = await this.userService.findOneByEmail(email);
 
@@ -33,7 +33,7 @@ export class VerificationService {
           return true; // Return true to indicate successful verification
         } else {
           this.logger.log(`User already verified by email: ${email}`);
-          throw new HttpException('User not found!', HttpStatus.CONFLICT);
+          throw new HttpException('User already verified!', HttpStatus.CONFLICT);
         }
       } else {
         this.logger.log(`User not found for email: ${email}`);

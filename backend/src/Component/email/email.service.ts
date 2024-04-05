@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import welcomeMessage from './welcomeMessage';
 
 @Injectable()
 export class EmailService {
@@ -21,12 +22,8 @@ export class EmailService {
     verificationToken: string,
   ): Promise<void> {
     try {
-      const verificationUrl = `http://localhost:3000/verify-email?token=${verificationToken}`;
-      const message = `
-        <h1>Welcome to our platform!</h1>
-        <p>Thank you for joining us.</p>
-        <p>Please verify your email address by clicking <a href="${verificationUrl}">here</a>.</p>
-      `;
+      const verificationUrl = `${process.env.FRONTEND_END_POINT}/verify-email?token=${verificationToken}`;
+      const message = welcomeMessage(verificationUrl);
 
       await this.transporter.sendMail({
         from: process.env.EMAIL,
@@ -35,7 +32,7 @@ export class EmailService {
         html: message,
       });
 
-      this.logger.log(`Wellcome email send successfully.`);
+      this.logger.log(`Welcome email send successfully.`);
     } catch (error) {
       this.logger.log(`Error on reset email error:${error}`);
       throw error;

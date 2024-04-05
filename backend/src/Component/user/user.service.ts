@@ -55,6 +55,8 @@ export class UserService {
         role: 'user',
       });
 
+      let newUser = await createdUser.save();
+
       this.logger.log('Genrate verify-email token');
       // Generate verification token
       const verificationToken = this.jwtService.sign(
@@ -69,7 +71,7 @@ export class UserService {
         verificationToken,
       );
 
-      return await createdUser.save();
+      return newUser;
     } catch (error) {
       if (error.code === 11000) {
         throw new HttpException('Duplicate key error:', HttpStatus.CONFLICT);

@@ -343,9 +343,9 @@ const UserProfilePage = () => {
                   className="border border-gray-200 rounded-md overflow-hidden"
                 >
                   <Image
-                    src={book.coverImage}
+                    src={book.image.secure_url}
                     alt={book.title}
-                    width={1000}
+                    width={256}
                     height={256}
                     className="w-full h-48 object-cover"
                   />

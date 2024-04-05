@@ -10,6 +10,7 @@ const nextConfig = {
     domains: [
       "localhost",
       "tailwindui.com",
+      "example.com",
       "source.unsplash.com",
       "images.unsplash.com",
       "res.cloudinary.com"
