@@ -32,7 +32,6 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    ;
     await accountService
       .register(data)
       .then((res) => {
@@ -58,6 +57,25 @@ export default function SignUp() {
         </div>
 
         <div className="my-4  sm:mx-auto sm:w-full sm:max-w-sm ">
+          {false && (
+            <div className="flex flex-col items-center justify-center py-10">
+              <h2 className="text-2xl font-semibold mb-4">Verify Your Email</h2>
+              <p className="text-lg text-gray-700 mb-6">
+                {`A verification email has been sent to {email}. Please check your
+                inbox and click on the verification link to complete the
+                registration process.`}
+              </p>
+              <p className="text-lg text-gray-700 mb-6">
+                {`If you haven't received the email within a few minutes, please
+                check your spam folder.`}
+              </p>
+              <p className="text-lg text-gray-700 mb-6">
+                {`Once you've verified your email, you'll be able to access all
+                the features of our platform.`}
+              </p>
+            </div>
+          )}
+
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="container mx-auto">
               {showAlert && (

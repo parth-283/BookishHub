@@ -1,154 +1,174 @@
-import { useState } from "react";
-import Head from "next/head";
-import Link from "next/link";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import Image from "next/image";
+// pages/cart.js
 
-const AddToCart = () => {
-  const [booksInCart, setBooksInCart] = useState([
-    { id: 1, name: "Book 1", image: "/book1.jpg", quantity: 1 },
-    { id: 2, name: "Book 2", image: "/book2.jpg", quantity: 2 },
-    // Add more books as needed
+import React, { useState } from "react";
+import PaymentFailedPopup from "./Popups/PaymentFailedPopup";
+import PaymentSuccessPopup from "./Popups/PaymentSuccessPopup";
+import CheckoutPopup from "./Popups/CheckoutPopup";
+
+const CartPage = () => {
+  // Sample books data
+  const [books, setBooks] = useState([
+    {
+      id: 1,
+      title: "Book 1",
+      price: 10,
+      quantity: 1,
+      image: "https://source.unsplash.com/1600x1000/?book",
+    },
+    {
+      id: 2,
+      title: "Book 2",
+      price: 15,
+      quantity: 1,
+      image: "https://source.unsplash.com/1600x1000/?book",
+    },
+    {
+      id: 3,
+      title: "Book 3",
+      price: 20,
+      quantity: 1,
+      image: "https://source.unsplash.com/1600x1000/?book",
+    },
   ]);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentFailed, setPaymentFailed] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const handleIncrement = (index) => {
-    const updatedBooks = [...booksInCart];
-    updatedBooks[index].quantity++;
-    setBooksInCart(updatedBooks);
-  };
-
-  const handleDecrement = (index) => {
-    const updatedBooks = [...booksInCart];
-    if (updatedBooks[index].quantity > 1) {
-      updatedBooks[index].quantity--;
-      setBooksInCart(updatedBooks);
-    }
-  };
-
-  const handleRemove = (index) => {
-    const updatedBooks = [...booksInCart];
-    updatedBooks.splice(index, 1);
-    setBooksInCart(updatedBooks);
-  };
-
-  const totalPrice = booksInCart.reduce(
-    (acc, book) => acc + book.quantity * 10,
+  // Calculate subtotal and total
+  const subtotal = books.reduce(
+    (acc, book) => acc + book.price * book.quantity,
     0
   );
+  const total = subtotal;
 
-  const handleSubmitPayment = async (event) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
-
-    const cardElement = elements.getElement(CardElement);
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
+  // Function to handle quantity increment
+  const handleIncrement = (id) => {
+    const updatedBooks = books.map((book) => {
+      if (book.id === id) {
+        return { ...book, quantity: book.quantity + 1 };
+      }
+      return book;
     });
+    setBooks(updatedBooks);
+  };
 
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(paymentMethod);
-      // Handle successful payment (e.g., send paymentMethod.id to your server)
-    }
+  // Function to handle quantity decrement
+  const handleDecrement = (id) => {
+    const updatedBooks = books.map((book) => {
+      if (book.id === id && book.quantity > 1) {
+        return { ...book, quantity: book.quantity - 1 };
+      }
+      return book;
+    });
+    setBooks(updatedBooks);
+  };
+
+  // Function to handle book removal
+  const handleRemoveBook = (id) => {
+    const updatedBooks = books.filter((book) => book.id !== id);
+    setBooks(updatedBooks);
+  };
+
+  const handlePaymentSuccess = () => {
+    setPaymentSuccess(true);
+  };
+
+  const handlePaymentFailed = () => {
+    setPaymentFailed(true);
+  };
+
+  const handleCloseSuccessPopup = () => {
+    setPaymentSuccess(false);
+  };
+
+  const handleCloseFailedPopup = () => {
+    setPaymentFailed(false);
+  };
+
+  const handleOpenCheckout = () => {
+    setIsCheckoutOpen(true);
+  };
+
+  const handleCloseCheckout = () => {
+    setIsCheckoutOpen(false);
   };
 
   return (
-    <div className="container mx-auto">
-      <Head>
-        <title>Cart</title>
-      </Head>
-      <div className="mt-8 mb-4 flex items-center">
-        <Link href="/books">
-          <p className="mr-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="h-6 w-6 inline-block"
-            >
-              <path
-                fill="currentColor"
-                d="M20 11H7.41l5.3-5.29a1 1 0 1 0-1.42-1.42l-7 7a1 1 0 0 0 0 1.42l7 7a1 1 0 0 0 1.42-1.42L7.41 13H20a1 1 0 0 0 0-2z"
-              />
-            </svg>
-            <span className="text-lg">Back to Book List</span>
-          </p>
-        </Link>
-        <h1 className="text-3xl font-bold">Your Cart</h1>
-      </div>
-      {booksInCart.length === 0 ? (
-        <p className="text-xl">Your cart is empty</p>
-      ) : (
-        <div>
-          {booksInCart.map((book, index) => (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row items-start justify-between space-y-6 md:space-x-8">
+        {/* Left Column - Cart Items */}
+        <div className="md:w-2/3">
+          <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
+          {books.map((book) => (
             <div
               key={book.id}
-              className="flex items-center border-b border-gray-300 py-4"
+              className="flex justify-between items-center border-b border-gray-300 py-2"
             >
-              <div className="w-24 h-24 mr-4">
-                <Image
+              <div className="flex items-center space-x-4">
+                <img
                   src={book.image}
-                  alt={book.name}
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-cover"
+                  alt={book.title}
+                  className="w-16 h-16 object-cover rounded-lg"
                 />
-              </div>
-              <div className="flex-grow mr-4">
-                <p className="text-lg font-semibold">{book.name}</p>
-                <div className="flex items-center mt-2">
-                  <button
-                    onClick={() => handleDecrement(index)}
-                    className="bg-gray-200 text-gray-600 px-3 py-1 rounded-md mr-2"
-                  >
-                    -
-                  </button>
-                  <p className="font-semibold">{book.quantity}</p>
-                  <button
-                    onClick={() => handleIncrement(index)}
-                    className="bg-gray-200 text-gray-600 px-3 py-1 rounded-md ml-2"
-                  >
-                    +
-                  </button>
+                <div>
+                  <h3 className="text-lg font-semibold">{book.title}</h3>
+                  <p className="text-gray-600">${book.price}</p>
                 </div>
               </div>
-              <button
-                onClick={() => handleRemove(index)}
-                className="text-red-500 font-semibold"
-              >
-                Remove
-              </button>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => handleDecrement(book.id)}
+                  className="px-3 py-1 bg-gray-200 rounded"
+                >
+                  -
+                </button>
+                <p>{book.quantity}</p>
+                <button
+                  onClick={() => handleIncrement(book.id)}
+                  className="px-3 py-1 bg-gray-200 rounded"
+                >
+                  +
+                </button>
+                <button
+                  onClick={() => handleRemoveBook(book.id)}
+                  className="px-3 py-1 bg-red-500 text-white rounded"
+                >
+                  Remove
+                </button>
+              </div>
             </div>
           ))}
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">
-              Total Price: ${totalPrice}
-            </h2>
-            <form onSubmit={handleSubmitPayment}>
-              <CardElement className="border border-gray-300 rounded-md p-2 mb-4" />
-              <button
-                type="submit"
-                disabled={!stripe}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
-              >
-                Pay Now
-              </button>
-            </form>
+        </div>
+
+        {/* Right Column - Subtotal and Checkout */}
+        <div className="md:w-1/3">
+          <div className="bg-gray-100 p-4 rounded">
+            <h2 className="text-lg font-semibold mb-4">Summary</h2>
+            <div className="flex justify-between items-center mb-2">
+              <p>Subtotal:</p>
+              <p>${subtotal}</p>
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <p>Total:</p>
+              <p>${total}</p>
+            </div>
+            <button
+              className="bg-green-500 text-white px-4 py-2 rounded w-full"
+              onClick={handleOpenCheckout}
+            >
+              Proceed to Checkout
+            </button>
           </div>
         </div>
+      </div>
+      {paymentSuccess && (
+        <PaymentSuccessPopup onClose={handleCloseSuccessPopup} />
       )}
+      {paymentFailed && <PaymentFailedPopup onClose={handleCloseFailedPopup} />}
+      
+      <CheckoutPopup isOpen={isCheckoutOpen} onClose={handleCloseCheckout} />
     </div>
   );
 };
 
-export default AddToCart;
+export default CartPage;

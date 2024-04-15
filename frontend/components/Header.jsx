@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import AddToCartModal from "./AddToCartModal ";
+import AddToCartModal from "./AddToCartModal";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

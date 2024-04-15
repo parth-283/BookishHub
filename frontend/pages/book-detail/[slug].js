@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { booksService } from "@/services/books.service";
-import AddToCartModal from "@/components/AddToCartModal ";
+import AddToCartModal from "@/components/AddToCartModal";
 import Image from "next/image";
 
 const BookDetailPage = () => {
