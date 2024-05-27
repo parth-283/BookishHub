@@ -1,7 +1,7 @@
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
-export const multerOptions = {
+const multerOptions = {
   fileFilter: (req: any, file: any, callback: any) => {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
       return callback(new Error('Only image files are allowed!'), false);
@@ -19,3 +19,5 @@ export const multerOptions = {
     },
   }),
 };
+
+export default multerOptions;
