@@ -18,15 +18,15 @@ import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/utils/multer.config';
+import multerOptions from '../../utils/multer.config';
 import { Book } from '../books/schemas/book.schema';
 import { AddRatingDto } from '../books/dto/rating.book.dto';
-import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guard/jwt-auth/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {

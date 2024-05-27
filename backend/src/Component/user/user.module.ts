@@ -6,7 +6,7 @@ import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
 import { EmailModule } from '../email/email.module';
-import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guard/jwt-auth/jwt-auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { ImagesModule } from '../images/images.module';
 import { BooksModule } from '../books/books.module';
@@ -31,4 +31,4 @@ import { PassportModule } from '@nestjs/passport';
   controllers: [UserController],
   exports: [UserService, MongooseModule],
 })
-export class UserModule {}
+export class UserModule { }

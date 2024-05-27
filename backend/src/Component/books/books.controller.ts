@@ -19,15 +19,15 @@ import { BooksService } from './books.service';
 import { Book } from './schemas/book.schema';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/utils/multer.config';
-import { JwtAuthGuard } from 'src/guard/jwt-auth/jwt-auth.guard';
+import multerOptions from '../../utils/multer.config';
+import { JwtAuthGuard } from '../../guard/jwt-auth/jwt-auth.guard';
 
 @ApiTags('books')
 @Controller('books')
 export class BooksController {
   private readonly logger = new Logger(BooksController.name);
 
-  constructor(private readonly booksService: BooksService) {}
+  constructor(private readonly booksService: BooksService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()

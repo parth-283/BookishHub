@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-dto/login-dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ChangePasswordDto } from './dto/change-password-dto/change-password.dto';
-import { User } from 'src/Component/user/schemas/user.schema';
+import { User } from '../Component/user/schemas/user.schema';
 import { ResetPasswordDto } from './dto/reset-password-dto/reset-password.dto';
 import { ApiTags } from '@nestjs/swagger';
 

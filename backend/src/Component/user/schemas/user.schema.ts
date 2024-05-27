@@ -2,7 +2,7 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { BookDocument } from 'src/Component/books/schemas/book.schema';
+import { BookDocument } from '../../../Component/books/schemas/book.schema';
 import { ImageResponseDto } from '../dto/image-user.dto/image-user.dto';
 
 @Schema({ timestamps: true })
