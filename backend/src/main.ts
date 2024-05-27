@@ -9,7 +9,7 @@ async function bootstrap() {
   // Enable CORS
   app.use(cors());
 
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT = process.env.PORT || 5000;
 
   const config = new DocumentBuilder()
     .setTitle('Bookishub API')
