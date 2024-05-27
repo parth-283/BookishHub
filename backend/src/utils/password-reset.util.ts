@@ -1,11 +1,11 @@
 import * as crypto from 'crypto';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { EmailService } from 'src/Component/email/email.service';
+import { EmailService } from '.././Component/email/email.service';
 
 @Injectable()
 export class PasswordResetUtil {
   private readonly logger = new Logger(PasswordResetUtil.name);
-  constructor(private readonly mailService: EmailService) {}
+  constructor(private readonly mailService: EmailService) { }
 
   async decodeResetToken(
     token: string,

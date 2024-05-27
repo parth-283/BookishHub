@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/Component/user/schemas/user.schema';
-import { UserService } from 'src/Component/user/user.service';
+import { User } from '../Component/user/schemas/user.schema';
+import { UserService } from '../Component/user/user.service';
 import { ChangePasswordDto } from './dto/change-password-dto/change-password.dto';
 import { ResetPasswordDto } from './dto/reset-password-dto/reset-password.dto';
-import { PasswordResetUtil } from 'src/utils/password-reset.util';
+import { PasswordResetUtil } from '.././utils/password-reset.util';
 import { LoginDto } from './dto/login-dto/login-dto';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private passwordResetUtil: PasswordResetUtil,
-  ) {}
+  ) { }
 
   async generateToken(
     user: User,

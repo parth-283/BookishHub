@@ -7,8 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategyService } from './jwt.strategy/jwt.strategy.service';
 import { UserModule } from '../Component/user/user.module';
-import { PasswordResetUtil } from 'src/utils/password-reset.util';
-import { EmailModule } from 'src/Component/email/email.module';
+import { PasswordResetUtil } from '.././utils/password-reset.util';
+import { EmailModule } from '../Component/email/email.module';
 
 @Module({
   imports: [
@@ -25,4 +25,4 @@ import { EmailModule } from 'src/Component/email/email.module';
   providers: [AuthService, JwtStrategyService, PasswordResetUtil],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }
